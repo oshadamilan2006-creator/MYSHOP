@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>MYSHOP - My Products</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, "Noto Sans Sinhala", sans-serif;
+    background: #0b0b12;
+    color: white;
+}
+
+header {
+    background: #11111b;
+    border-bottom: 1px solid #292936;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #a855f7;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.back {
+    color: #ddd;
+    text-decoration: none;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 30px 18px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+.add {
+    background: #8b5cf6;
+    color: white;
+    text-decoration: none;
+    padding: 12px 18px;
+    border-radius: 9px;
+    font-weight: bold;
+}
+
+.list {
+    display: grid;
+    gap: 15px;
+}
+
+.product {
+    background: #15151f;
+    border: 1px solid #292936;
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.product img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #22222d;
+}
+
+.no-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    background: #22222d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    text-align: center;
+    font-size: 13px;
+}
+
+.info {
+    flex: 1;
+}
+
+.name {
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.price {
+    color: #c084fc;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.stock {
+    color: #999;
+    margin-bottom: 6px;
+}
+
+.description {
+    color: #888;
+    line-height: 1.5;
+}
+
+.empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: #777;
+    background: #14141d;
+    border-radius: 14px;
+}
+
+.loading {
+    text-align: center;
+    color: #999;
+    padding: 30px;
+}
+
+@media(max-width:600px) {
+
+    .top {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .product {
+        align-items: flex-start;
+    }
+
+    .product img,
+    .no-image {
+        width: 80px;
+        height: 80px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        MYSHOP
+    </div>
+
+    <a
+        href="dashboard.html"
+        class="back"
+    >
+        ← Dashboard
+    </a>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="top">
+
+        <h1>
+            📦 My Products
+        </h1>
+
+        <a
+            href="products.html"
+            class="add"
+        >
+            ➕ Add Product
+        </a>
+
+    </div>
+
+
+    <div
+        id="productList"
+        class="list"
+    >
+
+        <div class="loading">
+            Products loading...
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+const API =
+    "https://myshop-api.oshadamilan2006.workers.dev/";
+
+
+/* LOGIN */
+
+const savedBusiness =
+    localStorage.getItem(
+        "myshop_business"
+    );
+
+
+if (!savedBusiness) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+let business;
+
+
+try {
+
+    business =
+        JSON.parse(savedBusiness);
+
+} catch (error) {
+
+    localStorage.removeItem(
+        "myshop_business"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* LOAD PRODUCTS */
+
+async function loadProducts() {
+
+    const list =
+        document.getElementById(
+            "productList"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                API,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "get_products",
+
+                            business_id:
+                                business.id
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !result.success
+        ) {
+
+            list.innerHTML = `
+                <div class="empty">
+                    ❌ Products ලබාගන්න බැරි වුණා.
+                    <br><br>
+                    ${escapeHTML(
+                        result.error || ""
+                    )}
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        if (
+            !result.products ||
+            result.products.length === 0
+        ) {
+
+            list.innerHTML = `
+                <div class="empty">
+                    📦 තවම Products නැහැ.
+                    <br><br>
+                    ඉහළ තියෙන
+                    <b>➕ Add Product</b>
+                    button එකෙන් Product එකක් එකතු කරන්න.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        list.innerHTML = "";
+
+
+        result.products.forEach(
+            function(product) {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "product";
+
+
+                let imageHTML = `
+                    <div class="no-image">
+                        🖼️<br>
+                        No Image
+                    </div>
+                `;
+
+
+                if (
+                    product.image_url
+                ) {
+
+                    imageHTML = `
+                        <img
+                            src="${escapeHTML(
+                                product.image_url
+                            )}"
+                            alt="${escapeHTML(
+                                product.name
+                            )}"
+                        >
+                    `;
+
+                }
+
+
+                item.innerHTML = `
+
+                    ${imageHTML}
+
+                    <div class="info">
+
+                        <div class="name">
+                            ${escapeHTML(
+                                product.name
+                            )}
+                        </div>
+
+                        <div class="price">
+                            Rs.
+                            ${Number(
+                                product.price
+                            ).toLocaleString()}
+                        </div>
+
+                        <div class="stock">
+                            📦 Stock:
+                            ${product.stock}
+                        </div>
+
+                        <div class="description">
+                            ${escapeHTML(
+                                product.description || ""
+                            )}
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                list.appendChild(
+                    item
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        list.innerHTML = `
+            <div class="empty">
+                ❌ Server එකට connect වෙන්න බැරි වුණා.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* SECURITY */
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+loadProducts();
+
+</script>
+
+
+</body>
+
+</html>
