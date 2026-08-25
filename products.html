@@ -1,1 +1,784 @@
+<!DOCTYPE html>
+<html lang="si">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>MYSHOP - Products</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, "Noto Sans Sinhala", sans-serif;
+    background: #0b0b12;
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    height: 70px;
+    background: #11111b;
+    border-bottom: 1px solid #292936;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 6%;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: #a855f7;
+}
+
+.back {
+    color: #aaa;
+    text-decoration: none;
+}
+
+.back:hover {
+    color: white;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 35px 20px;
+}
+
+.title {
+    margin-bottom: 25px;
+}
+
+.title h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.title p {
+    color: #9999a8;
+}
+
+.form-box {
+    background: #14141d;
+    border: 1px solid #292936;
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #ddd;
+}
+
+input,
+textarea {
+    width: 100%;
+
+    background: #0d0d14;
+    color: white;
+
+    border: 1px solid #353542;
+    border-radius: 9px;
+
+    padding: 13px;
+
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #8b5cf6;
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.add-button {
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #8b5cf6;
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background: #7c3aed;
+}
+
+.add-button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.message {
+    display: none;
+
+    padding: 13px;
+
+    margin-bottom: 20px;
+
+    border-radius: 9px;
+
+    text-align: center;
+}
+
+.success {
+    display: block;
+    background: #12351f;
+    border: 1px solid #237a43;
+    color: #7ee2a8;
+}
+
+.error {
+    display: block;
+    background: #351414;
+    border: 1px solid #7a2323;
+    color: #ff8f8f;
+}
+
+.products-section {
+    margin-top: 35px;
+}
+
+.products-section h2 {
+    margin-bottom: 18px;
+}
+
+.product {
+    background: #14141d;
+    border: 1px solid #292936;
+    border-radius: 12px;
+
+    padding: 18px;
+    margin-bottom: 12px;
+}
+
+.product-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-price {
+    color: #c084fc;
+    margin-top: 6px;
+}
+
+.product-description {
+    color: #9999a8;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.empty {
+    color: #777;
+    padding: 20px;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+
+    .container {
+        padding: 25px 15px;
+    }
+
+    .form-box {
+        padding: 22px;
+    }
+
+    .title h1 {
+        font-size: 27px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        MYSHOP
+    </div>
+
+    <a
+        href="dashboard.html"
+        class="back"
+    >
+        ← Dashboard
+    </a>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="title">
+
+        <h1>
+            ➕ Product එකක් එකතු කරන්න
+        </h1>
+
+        <p>
+            ඔබේ Online Store එකට products එකතු කරන්න.
+        </p>
+
+    </div>
+
+
+    <div class="form-box">
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <form id="productForm">
+
+
+            <div class="form-group">
+
+                <label>
+                    🏷️ Product Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="උදා: T-Shirt"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    💰 Price (Rs.)
+                </label>
+
+                <input
+                    type="number"
+                    id="price"
+                    placeholder="1500"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    📦 Stock
+                </label>
+
+                <input
+                    type="number"
+                    id="stock"
+                    placeholder="10"
+                    min="0"
+                    value="0"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    📝 Description
+                </label>
+
+                <textarea
+                    id="description"
+                    placeholder="Product එක ගැන විස්තර..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    🖼️ Product Image URL
+                </label>
+
+                <input
+                    type="url"
+                    id="image"
+                    placeholder="https://example.com/image.jpg"
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="add-button"
+                id="addButton"
+            >
+                ➕ Product එක එකතු කරන්න
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+    <div class="products-section">
+
+        <h2>
+            🛍️ ඔබේ Products
+        </h2>
+
+        <div id="productList">
+
+            <div class="empty">
+                Products loading...
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+const API =
+    "https://myshop-api.oshadamilan2006.workers.dev/";
+
+
+/* =========================================
+   CHECK LOGIN
+========================================= */
+
+const savedBusiness =
+    localStorage.getItem(
+        "myshop_business"
+    );
+
+
+if (!savedBusiness) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+let business;
+
+
+try {
+
+    business =
+        JSON.parse(savedBusiness);
+
+}
+catch (error) {
+
+    localStorage.removeItem(
+        "myshop_business"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================
+   ADD PRODUCT
+========================================= */
+
+document
+.getElementById("productForm")
+.addEventListener(
+    "submit",
+    async function(e) {
+
+        e.preventDefault();
+
+
+        const name =
+            document
+            .getElementById("name")
+            .value
+            .trim();
+
+
+        const price =
+            Number(
+                document
+                .getElementById("price")
+                .value
+            );
+
+
+        const stock =
+            Number(
+                document
+                .getElementById("stock")
+                .value
+            );
+
+
+        const description =
+            document
+            .getElementById("description")
+            .value
+            .trim();
+
+
+        const image =
+            document
+            .getElementById("image")
+            .value
+            .trim();
+
+
+        const message =
+            document
+            .getElementById("message");
+
+
+        const button =
+            document
+            .getElementById("addButton");
+
+
+        button.disabled = true;
+
+        button.textContent =
+            "⏳ Saving...";
+
+
+        message.className =
+            "message";
+
+        message.style.display =
+            "block";
+
+        message.textContent =
+            "⏳ Product එක save කරමින්..." ;
+
+
+        try {
+
+
+            const response =
+                await fetch(
+                    API,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                action:
+                                    "add_product",
+
+                                business_id:
+                                    business.id,
+
+                                name:
+                                    name,
+
+                                price:
+                                    price,
+
+                                stock:
+                                    stock,
+
+                                description:
+                                    description,
+
+                                image_url:
+                                    image
+
+                            })
+
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (result.success) {
+
+
+                message.className =
+                    "message success";
+
+
+                message.textContent =
+                    "✅ Product එක සාර්ථකව එකතු කළා!";
+
+
+                document
+                .getElementById(
+                    "productForm"
+                )
+                .reset();
+
+
+                document
+                .getElementById(
+                    "stock"
+                )
+                .value = "0";
+
+
+                loadProducts();
+
+            }
+            else {
+
+                message.className =
+                    "message error";
+
+
+                message.textContent =
+                    "❌ " +
+                    (
+                        result.error ||
+                        "Product එක එකතු කරන්න බැරි වුණා."
+                    );
+
+            }
+
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+
+            message.className =
+                "message error";
+
+
+            message.textContent =
+                "❌ Server එකට සම්බන්ධ වෙන්න බැරි වුණා.";
+
+        }
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "➕ Product එක එකතු කරන්න";
+
+    }
+
+);
+
+
+/* =========================================
+   LOAD PRODUCTS
+========================================= */
+
+async function loadProducts() {
+
+
+    const list =
+        document
+        .getElementById(
+            "productList"
+        );
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                API,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "get_products",
+
+                            business_id:
+                                business.id
+
+                        })
+
+                    }
+                );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !result.success ||
+            !result.products ||
+            result.products.length === 0
+        ) {
+
+            list.innerHTML =
+                '<div class="empty">තවම Products නැහැ.</div>';
+
+            return;
+
+        }
+
+
+        list.innerHTML = "";
+
+
+        result.products.forEach(
+            function(product) {
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "product";
+
+
+                div.innerHTML = `
+
+                    <div class="product-name">
+                        ${escapeHTML(product.name)}
+                    </div>
+
+                    <div class="product-price">
+                        Rs. ${Number(product.price).toLocaleString()}
+                    </div>
+
+                    <div class="product-description">
+                        ${escapeHTML(product.description || "")}
+                    </div>
+
+                    <div style="color:#777;margin-top:8px;">
+                        Stock: ${product.stock}
+                    </div>
+
+                `;
+
+
+                list.appendChild(div);
+
+            }
+        );
+
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        list.innerHTML =
+            '<div class="empty">Products load කරන්න බැරි වුණා.</div>';
+
+    }
+
+}
+
+
+/* =========================================
+   HTML ESCAPE
+========================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+loadProducts();
+
+</script>
+
+
+</body>
+
+</html>
