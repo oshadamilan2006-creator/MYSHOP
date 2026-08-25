@@ -202,7 +202,49 @@ header {
     }
 
 }
+.dashboard-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
 
+.dashboard-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 22px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.add-product {
+    background: #8b5cf6;
+}
+
+.my-products {
+    background: #0891b2;
+}
+
+.dashboard-btn:hover {
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+
+    .dashboard-buttons {
+        flex-direction: column;
+    }
+
+    .dashboard-btn {
+        width: 100%;
+    }
+
+}
 </style>
 </head>
 
@@ -236,12 +278,23 @@ header {
             🏪 My Store
         </button>
 
-        <a href="products.html" class="add-product-btn">
-    ➕ Add Product
-</a>
-        <a href="my-products.html">
-    📦 My Products
-</a>
+        <div class="dashboard-buttons">
+
+    <a
+        href="products.html"
+        class="dashboard-btn add-product"
+    >
+        ➕ Add Product
+    </a>
+
+    <a
+        href="my-products.html"
+        class="dashboard-btn my-products"
+    >
+        📦 My Products
+    </a>
+
+</div>
 
         <button>
             📦 Orders
