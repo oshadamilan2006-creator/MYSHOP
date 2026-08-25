@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>MYSHOP - Order</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, "Noto Sans Sinhala", sans-serif;
+    background: #0b0b12;
+    color: white;
+}
+
+header {
+    background: #11111b;
+    border-bottom: 1px solid #292936;
+    padding: 18px;
+    text-align: center;
+}
+
+.logo {
+    color: #a855f7;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 650px;
+    margin: auto;
+    padding: 30px 18px 60px;
+}
+
+.card {
+    background: #15151f;
+    border: 1px solid #292936;
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 18px;
+}
+
+h1 {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #888;
+    margin-bottom: 25px;
+}
+
+.product {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.product img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-name {
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.product-price {
+    color: #c084fc;
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+label {
+    display: block;
+    margin-bottom: 7px;
+    color: #ddd;
+    font-weight: bold;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 17px;
+    background: #0b0b12;
+    color: white;
+    border: 1px solid #353542;
+    border-radius: 9px;
+    outline: none;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.quantity button {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 8px;
+    background: #33333f;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.quantity span {
+    min-width: 35px;
+    text-align: center;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.total {
+    border-top: 1px solid #292936;
+    padding-top: 15px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.total-price {
+    color: #c084fc;
+}
+
+.place-order {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #8b5cf6;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.place-order:hover {
+    background: #7c3aed;
+}
+
+.loading {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+}
+
+.success {
+    text-align: center;
+    padding: 30px 10px;
+}
+
+.success-icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.order-id {
+    margin-top: 15px;
+    padding: 12px;
+    background: #0b0b12;
+    border-radius: 8px;
+    color: #c084fc;
+    font-weight: bold;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 20px;
+    color: #aaa;
+    text-decoration: none;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        MYSHOP
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <div id="loading"
+         class="loading">
+
+        ⏳ Order details loading...
+
+    </div>
+
+
+    <div id="orderArea"
+         style="display:none;">
+
+
+        <div class="card">
+
+            <h1>
+                🛒 Place Order
+            </h1>
+
+            <div
+                id="storeName"
+                class="subtitle">
+            </div>
+
+
+            <div class="product">
+
+                <img
+                    id="productImage"
+                    src=""
+                    alt="Product"
+                >
+
+                <div class="product-info">
+
+                    <div
+                        id="productName"
+                        class="product-name">
+                    </div>
+
+                    <div
+                        id="productPrice"
+                        class="product-price">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+
+            <label>
+                👤 ඔබගේ නම
+            </label>
+
+            <input
+                id="customerName"
+                type="text"
+                placeholder="නම ඇතුළත් කරන්න"
+            >
+
+
+            <label>
+                📱 Phone Number
+            </label>
+
+            <input
+                id="phone"
+                type="tel"
+                placeholder="07XXXXXXXX"
+            >
+
+
+            <label>
+                💬 WhatsApp Number
+            </label>
+
+            <input
+                id="whatsapp"
+                type="tel"
+                placeholder="07XXXXXXXX"
+            >
+
+
+            <label>
+                🏠 Address
+            </label>
+
+            <textarea
+                id="address"
+                placeholder="ඔබගේ ලිපිනය"
+            ></textarea>
+
+
+            <label>
+                🏙️ City
+            </label>
+
+            <input
+                id="city"
+                type="text"
+                placeholder="නගරය"
+            >
+
+
+            <label>
+                📦 Quantity
+            </label>
+
+            <div class="quantity">
+
+                <button
+                    onclick="changeQty(-1)">
+                    −
+                </button>
+
+                <span
+                    id="quantity">
+                    1
+                </span>
+
+                <button
+                    onclick="changeQty(1)">
+                    +
+                </button>
+
+            </div>
+
+
+            <label>
+                📝 Additional Note
+            </label>
+
+            <textarea
+                id="note"
+                placeholder="අමතර විස්තරයක් තිබේ නම්..."
+            ></textarea>
+
+
+            <div class="total">
+
+                <span>
+                    Total
+                </span>
+
+                <span
+                    id="totalPrice"
+                    class="total-price">
+                    Rs. 0
+                </span>
+
+            </div>
+
+            <br>
+
+            <button
+                class="place-order"
+                onclick="placeOrder()">
+
+                ✅ Place Order
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="successArea"
+        style="display:none;">
+
+        <div class="card success">
+
+            <div class="success-icon">
+                🎉
+            </div>
+
+            <h1>
+                Order Successful!
+            </h1>
+
+            <p
+                style="color:#999;margin-top:10px;">
+                ඔබගේ Order එක සාර්ථකව යවන ලදි.
+            </p>
+
+            <div
+                id="orderId"
+                class="order-id">
+            </div>
+
+            <a
+                id="backStore"
+                class="back"
+                href="#">
+                ← Back to Store
+            </a>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+const API =
+    "https://myshop-api.oshadamilan2006.workers.dev/";
+
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const storeSlug =
+    params.get("store");
+
+
+const productId =
+    params.get("product");
+
+
+let productPrice = 0;
+
+let maxStock = 1;
+
+let quantity = 1;
+
+
+if (
+    !storeSlug ||
+    !productId
+) {
+
+    document.getElementById(
+        "loading"
+    ).innerHTML =
+        "❌ Order link එක වැරදියි.";
+
+} else {
+
+    loadOrder();
+
+}
+
+
+async function loadOrder() {
+
+    try {
+
+        const response =
+            await fetch(
+                API,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "get_store",
+
+                            store_slug:
+                                storeSlug
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !result.success
+        ) {
+
+            showError(
+                result.error
+            );
+
+            return;
+
+        }
+
+
+        const product =
+            result.products.find(
+                function(item) {
+
+                    return String(
+                        item.id
+                    ) === String(
+                        productId
+                    );
+
+                }
+            );
+
+
+        if (!product) {
+
+            showError(
+                "Product එක හමු වුණේ නැහැ."
+            );
+
+            return;
+
+        }
+
+
+        productPrice =
+            Number(
+                product.price
+            );
+
+
+        maxStock =
+            Number(
+                product.stock
+            );
+
+
+        document.getElementById(
+            "storeName"
+        ).textContent =
+            result.business.business_name;
+
+
+        document.getElementById(
+            "productName"
+        ).textContent =
+            product.name;
+
+
+        document.getElementById(
+            "productPrice"
+        ).textContent =
+            "Rs. " +
+            productPrice.toLocaleString();
+
+
+        const image =
+            document.getElementById(
+                "productImage"
+            );
+
+
+        if (
+            product.image_url
+        ) {
+
+            image.src =
+                product.image_url;
+
+        } else {
+
+            image.style.display =
+                "none";
+
+        }
+
+
+        document.getElementById(
+            "loading"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "orderArea"
+        ).style.display =
+            "block";
+
+
+        updateTotal();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showError(
+            "Server එකට connect වෙන්න බැරි වුණා."
+        );
+
+    }
+
+}
+
+
+function changeQty(change) {
+
+    quantity += change;
+
+
+    if (quantity < 1) {
+        quantity = 1;
+    }
+
+
+    if (
+        quantity > maxStock
+    ) {
+        quantity = maxStock;
+    }
+
+
+    document.getElementById(
+        "quantity"
+    ).textContent =
+        quantity;
+
+
+    updateTotal();
+
+}
+
+
+function updateTotal() {
+
+    const total =
+        productPrice *
+        quantity;
+
+
+    document.getElementById(
+        "totalPrice"
+    ).textContent =
+        "Rs. " +
+        total.toLocaleString();
+
+}
+
+
+async function placeOrder() {
+
+    const name =
+        document.getElementById(
+            "customerName"
+        ).value.trim();
+
+
+    const phone =
+        document.getElementById(
+            "phone"
+        ).value.trim();
+
+
+    const whatsapp =
+        document.getElementById(
+            "whatsapp"
+        ).value.trim();
+
+
+    const address =
+        document.getElementById(
+            "address"
+        ).value.trim();
+
+
+    const city =
+        document.getElementById(
+            "city"
+        ).value.trim();
+
+
+    const note =
+        document.getElementById(
+            "note"
+        ).value.trim();
+
+
+    if (!name) {
+
+        alert(
+            "කරුණාකර ඔබගේ නම ඇතුළත් කරන්න."
+        );
+
+        return;
+
+    }
+
+
+    if (!phone) {
+
+        alert(
+            "කරුණාකර Phone Number එක ඇතුළත් කරන්න."
+        );
+
+        return;
+
+    }
+
+
+    if (!address) {
+
+        alert(
+            "කරුණාකර Address එක ඇතුළත් කරන්න."
+        );
+
+        return;
+
+    }
+
+
+    if (!city) {
+
+        alert(
+            "කරුණාකර City එක ඇතුළත් කරන්න."
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.querySelector(
+            ".place-order"
+        );
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "⏳ Sending Order...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                API,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "create_order",
+
+                            store_slug:
+                                storeSlug,
+
+                            product_id:
+                                productId,
+
+                            customer_name:
+                                name,
+
+                            phone:
+                                phone,
+
+                            whatsapp:
+                                whatsapp,
+
+                            address:
+                                address,
+
+                            city:
+                                city,
+
+                            quantity:
+                                quantity,
+
+                            note:
+                                note
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            result.success
+        ) {
+
+            document.getElementById(
+                "orderArea"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "successArea"
+            ).style.display =
+                "block";
+
+
+            document.getElementById(
+                "orderId"
+            ).textContent =
+                "Order ID: #" +
+                result.order_id;
+
+
+            document.getElementById(
+                "backStore"
+            ).href =
+                "shop.html?store=" +
+                encodeURIComponent(
+                    storeSlug
+                );
+
+        }
+        else {
+
+            alert(
+                "❌ " +
+                (
+                    result.error ||
+                    "Order failed"
+                )
+            );
+
+
+            button.disabled = false;
+
+            button.textContent =
+                "✅ Place Order";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Server error"
+        );
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "✅ Place Order";
+
+    }
+
+}
+
+
+function showError(message) {
+
+    document.getElementById(
+        "loading"
+    ).innerHTML =
+        "❌ " +
+        message;
+
+}
+
+</script>
+
+
+</body>
+
+</html>
