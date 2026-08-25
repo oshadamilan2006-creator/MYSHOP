@@ -828,7 +828,6 @@ async function placeOrder() {
         ) {
               if (result.success) {
 
-    // Order successful screen
     document.getElementById(
         "orderArea"
     ).style.display = "none";
@@ -841,6 +840,67 @@ async function placeOrder() {
         "orderId"
     ).textContent =
         "Order ID: #" + result.order_id;
+
+    document.getElementById(
+        "backStore"
+    ).href =
+        "shop.html?store=" +
+        encodeURIComponent(storeSlug);
+
+
+    // WhatsApp
+
+    const ownerWhatsApp =
+        result.business_whatsapp || "";
+
+    if (ownerWhatsApp) {
+
+        let whatsappNumber =
+            ownerWhatsApp.replace(
+                /[^0-9]/g,
+                ""
+            );
+
+        if (
+            whatsappNumber.startsWith("0")
+        ) {
+
+            whatsappNumber =
+                "94" +
+                whatsappNumber.substring(1);
+
+        }
+
+        const message =
+`🛒 NEW ORDER
+
+Order ID: #${result.order_id}
+
+📦 Product: ${productName}
+🔢 Quantity: ${quantity}
+
+👤 Customer: ${name}
+📱 Phone: ${phone}
+💬 WhatsApp: ${whatsapp}
+
+🏠 Address: ${address}
+🏙️ City: ${city}
+
+💰 Total: Rs. ${(productPrice * quantity).toLocaleString()}
+
+📝 Note: ${note || "None"}`;
+
+        const whatsappURL =
+            "https://wa.me/" +
+            whatsappNumber +
+            "?text=" +
+            encodeURIComponent(message);
+
+        window.location.href =
+            whatsappURL;
+    }
+
+}
 
 
     // Store back button
