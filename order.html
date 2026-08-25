@@ -826,6 +826,98 @@ async function placeOrder() {
         if (
             result.success
         ) {
+              if (result.success) {
+
+    // Order successful screen
+    document.getElementById(
+        "orderArea"
+    ).style.display = "none";
+
+    document.getElementById(
+        "successArea"
+    ).style.display = "block";
+
+    document.getElementById(
+        "orderId"
+    ).textContent =
+        "Order ID: #" + result.order_id;
+
+
+    // Store back button
+    document.getElementById(
+        "backStore"
+    ).href =
+        "shop.html?store=" +
+        encodeURIComponent(storeSlug);
+
+
+    // =====================================
+    // WHATSAPP MESSAGE
+    // =====================================
+
+    const ownerWhatsApp =
+        result.business_whatsapp || "";
+
+
+    if (ownerWhatsApp) {
+
+        let whatsappNumber =
+            ownerWhatsApp.replace(
+                /[^0-9]/g,
+                ""
+            );
+
+
+        // Sri Lankan 07XXXXXXXX
+        if (
+            whatsappNumber.startsWith("0")
+        ) {
+
+            whatsappNumber =
+                "94" +
+                whatsappNumber.substring(1);
+
+        }
+
+
+        const message =
+`🛒 NEW ORDER
+
+Order ID: #${result.order_id}
+
+📦 Product: ${productName}
+🔢 Quantity: ${quantity}
+
+👤 Customer: ${name}
+📱 Phone: ${phone}
+💬 WhatsApp: ${whatsapp}
+
+🏠 Address: ${address}
+🏙️ City: ${city}
+
+💰 Total: Rs. ${(
+    productPrice * quantity
+).toLocaleString()}
+
+📝 Note: ${note || "None"}`;
+
+
+        const whatsappURL =
+            "https://wa.me/" +
+            whatsappNumber +
+            "?text=" +
+            encodeURIComponent(
+                message
+            );
+
+
+        // Open WhatsApp
+        window.location.href =
+            whatsappURL;
+
+    }
+
+}
 
             document.getElementById(
                 "orderArea"
