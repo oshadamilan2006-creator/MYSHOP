@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0">
 
 <title>MYSHOP - Order</title>
 
@@ -26,9 +26,9 @@ body {
 
 header {
     background: #11111b;
-    border-bottom: 1px solid #292936;
     padding: 18px;
     text-align: center;
+    border-bottom: 1px solid #292936;
 }
 
 .logo {
@@ -128,7 +128,6 @@ textarea {
     background: #33333f;
     color: white;
     font-size: 22px;
-    cursor: pointer;
 }
 
 .quantity span {
@@ -141,7 +140,6 @@ textarea {
 .total {
     border-top: 1px solid #292936;
     padding-top: 15px;
-    margin-top: 5px;
     display: flex;
     justify-content: space-between;
     font-size: 20px;
@@ -164,14 +162,14 @@ textarea {
     cursor: pointer;
 }
 
-.place-order:hover {
-    background: #7c3aed;
+.place-order:disabled {
+    opacity: 0.6;
 }
 
 .loading {
     text-align: center;
-    padding: 30px;
-    color: #999;
+    padding: 40px;
+    color: #aaa;
 }
 
 .success {
@@ -193,9 +191,20 @@ textarea {
     font-weight: bold;
 }
 
+.whatsapp-btn {
+    display: block;
+    margin-top: 15px;
+    padding: 14px;
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
 .back {
-    display: inline-block;
-    margin-top: 20px;
+    display: block;
+    margin-top: 18px;
     color: #aaa;
     text-decoration: none;
 }
@@ -204,15 +213,13 @@ textarea {
 
 </head>
 
-
 <body>
-
 
 <header>
 
-    <div class="logo">
-        MYSHOP
-    </div>
+<div class="logo">
+MYSHOP
+</div>
 
 </header>
 
@@ -220,212 +227,218 @@ textarea {
 <div class="container">
 
 
-    <div id="loading"
-         class="loading">
+<div id="loading"
+class="loading">
 
-        ⏳ Order details loading...
+⏳ Order details loading...
 
-    </div>
+</div>
 
 
-    <div id="orderArea"
-         style="display:none;">
+<div id="orderArea"
+style="display:none;">
 
 
-        <div class="card">
+<div class="card">
 
-            <h1>
-                🛒 Place Order
-            </h1>
+<h1>
+🛒 Order
+</h1>
 
-            <div
-                id="storeName"
-                class="subtitle">
-            </div>
+<div id="storeName"
+class="subtitle">
+</div>
 
 
-            <div class="product">
+<div class="product">
 
-                <img
-                    id="productImage"
-                    src=""
-                    alt="Product"
-                >
+<img
+id="productImage"
+src=""
+alt="Product">
 
-                <div class="product-info">
+<div class="product-info">
 
-                    <div
-                        id="productName"
-                        class="product-name">
-                    </div>
+<div
+id="productName"
+class="product-name">
+</div>
 
-                    <div
-                        id="productPrice"
-                        class="product-price">
-                    </div>
+<div
+id="productPrice"
+class="product-price">
+</div>
 
-                </div>
+</div>
 
-            </div>
+</div>
 
-        </div>
+</div>
 
 
-        <div class="card">
+<div class="card">
 
 
-            <label>
-                👤 ඔබගේ නම
-            </label>
+<label>
+👤 ඔබගේ නම
+</label>
 
-            <input
-                id="customerName"
-                type="text"
-                placeholder="නම ඇතුළත් කරන්න"
-            >
+<input
+id="customerName"
+type="text"
+placeholder="නම">
 
 
-            <label>
-                📱 Phone Number
-            </label>
+<label>
+📱 Phone Number
+</label>
 
-            <input
-                id="phone"
-                type="tel"
-                placeholder="07XXXXXXXX"
-            >
+<input
+id="phone"
+type="tel"
+placeholder="07XXXXXXXX">
 
 
-            <label>
-                💬 WhatsApp Number
-            </label>
+<label>
+💬 WhatsApp Number
+</label>
 
-            <input
-                id="whatsapp"
-                type="tel"
-                placeholder="07XXXXXXXX"
-            >
+<input
+id="whatsapp"
+type="tel"
+placeholder="07XXXXXXXX">
 
 
-            <label>
-                🏠 Address
-            </label>
+<label>
+🏠 Address
+</label>
 
-            <textarea
-                id="address"
-                placeholder="ඔබගේ ලිපිනය"
-            ></textarea>
+<textarea
+id="address"
+placeholder="ලිපිනය"></textarea>
 
 
-            <label>
-                🏙️ City
-            </label>
+<label>
+🏙️ City
+</label>
 
-            <input
-                id="city"
-                type="text"
-                placeholder="නගරය"
-            >
+<input
+id="city"
+type="text"
+placeholder="නගරය">
 
 
-            <label>
-                📦 Quantity
-            </label>
+<label>
+📦 Quantity
+</label>
 
-            <div class="quantity">
+<div class="quantity">
 
-                <button
-                    onclick="changeQty(-1)">
-                    −
-                </button>
+<button
+type="button"
+onclick="changeQty(-1)">
+−
+</button>
 
-                <span
-                    id="quantity">
-                    1
-                </span>
+<span id="quantity">
+1
+</span>
 
-                <button
-                    onclick="changeQty(1)">
-                    +
-                </button>
+<button
+type="button"
+onclick="changeQty(1)">
++
+</button>
 
-            </div>
+</div>
 
 
-            <label>
-                📝 Additional Note
-            </label>
+<label>
+📝 Note
+</label>
 
-            <textarea
-                id="note"
-                placeholder="අමතර විස්තරයක් තිබේ නම්..."
-            ></textarea>
+<textarea
+id="note"
+placeholder="අමතර විස්තර"></textarea>
 
 
-            <div class="total">
+<div class="total">
 
-                <span>
-                    Total
-                </span>
+<span>
+Total
+</span>
 
-                <span
-                    id="totalPrice"
-                    class="total-price">
-                    Rs. 0
-                </span>
+<span
+id="totalPrice"
+class="total-price">
+Rs. 0
+</span>
 
-            </div>
+</div>
 
-            <br>
+<br>
 
-            <button
-                class="place-order"
-                onclick="placeOrder()">
 
-                ✅ Place Order
+<button
+id="placeOrderButton"
+class="place-order"
+onclick="placeOrder()">
 
-            </button>
+✅ Place Order
 
+</button>
 
-        </div>
 
-    </div>
+</div>
 
+</div>
 
-    <div
-        id="successArea"
-        style="display:none;">
 
-        <div class="card success">
+<div
+id="successArea"
+style="display:none;">
 
-            <div class="success-icon">
-                🎉
-            </div>
+<div class="card success">
 
-            <h1>
-                Order Successful!
-            </h1>
+<div class="success-icon">
+🎉
+</div>
 
-            <p
-                style="color:#999;margin-top:10px;">
-                ඔබගේ Order එක සාර්ථකව යවන ලදි.
-            </p>
+<h1>
+Order Successful!
+</h1>
 
-            <div
-                id="orderId"
-                class="order-id">
-            </div>
+<p style="color:#999;margin-top:10px;">
+ඔබගේ Order එක සාර්ථකව save වුණා.
+</p>
 
-            <a
-                id="backStore"
-                class="back"
-                href="#">
-                ← Back to Store
-            </a>
+<div
+id="orderId"
+class="order-id">
+</div>
 
-        </div>
+<a
+id="whatsappButton"
+class="whatsapp-btn"
+href="#"
+target="_blank">
 
-    </div>
+📲 Send Order via WhatsApp
+
+</a>
+
+<a
+id="backStore"
+class="back"
+href="#">
+
+← Back to Store
+
+</a>
+
+</div>
+
+</div>
 
 
 </div>
@@ -434,21 +447,21 @@ textarea {
 <script>
 
 const API =
-    "https://myshop-api.oshadamilan2006.workers.dev/";
+"https://myshop-api.oshadamilan2006.workers.dev/";
 
 
 const params =
-    new URLSearchParams(
-        window.location.search
-    );
+new URLSearchParams(
+window.location.search
+);
 
 
 const storeSlug =
-    params.get("store");
+params.get("store");
 
 
 const productId =
-    params.get("product");
+params.get("product");
 
 
 let productPrice = 0;
@@ -457,421 +470,406 @@ let maxStock = 1;
 
 let quantity = 1;
 
+let productName = "";
 
-if (
-    !storeSlug ||
-    !productId
-) {
+let ownerWhatsApp = "";
 
-    document.getElementById(
-        "loading"
-    ).innerHTML =
-        "❌ Order link එක වැරදියි.";
+
+if (!storeSlug || !productId) {
+
+showError(
+"Order link එක වැරදියි."
+);
 
 } else {
 
-    loadOrder();
+loadOrder();
 
 }
 
 
 async function loadOrder() {
 
-    try {
+try {
 
-        const response =
-            await fetch(
-                API,
-                {
+const response =
+await fetch(
+API,
+{
+method: "POST",
 
-                    method: "POST",
+headers: {
+"Content-Type":
+"application/json"
+},
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+body:
+JSON.stringify({
 
-                    body:
-                        JSON.stringify({
+action:
+"get_store",
 
-                            action:
-                                "get_store",
+store_slug:
+storeSlug
 
-                            store_slug:
-                                storeSlug
-
-                        })
-
-                }
-            );
+})
+}
+);
 
 
-        const result =
-            await response.json();
+const result =
+await response.json();
 
 
-        if (
-            !result.success
-        ) {
+if (!result.success) {
 
-            showError(
-                result.error
-            );
+showError(
+result.error ||
+"Store එක හමු වුණේ නැහැ."
+);
 
-            return;
+return;
 
-        }
-
-
-        const product =
-            result.products.find(
-                function(item) {
-
-                    return String(
-                        item.id
-                    ) === String(
-                        productId
-                    );
-
-                }
-            );
+}
 
 
-        if (!product) {
-
-            showError(
-                "Product එක හමු වුණේ නැහැ."
-            );
-
-            return;
-
-        }
+const product =
+result.products.find(
+item =>
+String(item.id) ===
+String(productId)
+);
 
 
-        productPrice =
-            Number(
-                product.price
-            );
+if (!product) {
+
+showError(
+"Product එක හමු වුණේ නැහැ."
+);
+
+return;
+
+}
 
 
-        maxStock =
-            Number(
-                product.stock
-            );
+productPrice =
+Number(product.price);
+
+maxStock =
+Number(product.stock);
+
+productName =
+product.name;
 
 
-        document.getElementById(
-            "storeName"
-        ).textContent =
-            result.business.business_name;
+ownerWhatsApp =
+result.business.whatsapp || "";
 
 
-        document.getElementById(
-            "productName"
-        ).textContent =
-            product.name;
+document.getElementById(
+"storeName"
+).textContent =
+result.business.business_name;
 
 
-        document.getElementById(
-            "productPrice"
-        ).textContent =
-            "Rs. " +
-            productPrice.toLocaleString();
+document.getElementById(
+"productName"
+).textContent =
+product.name;
 
 
-        const image =
-            document.getElementById(
-                "productImage"
-            );
+document.getElementById(
+"productPrice"
+).textContent =
+"Rs. " +
+productPrice.toLocaleString();
 
 
-        if (
-            product.image_url
-        ) {
-
-            image.src =
-                product.image_url;
-
-        } else {
-
-            image.style.display =
-                "none";
-
-        }
+const image =
+document.getElementById(
+"productImage"
+);
 
 
-        document.getElementById(
-            "loading"
-        ).style.display =
-            "none";
+if (product.image_url) {
+
+image.src =
+product.image_url;
+
+} else {
+
+image.style.display =
+"none";
+
+}
 
 
-        document.getElementById(
-            "orderArea"
-        ).style.display =
-            "block";
+document.getElementById(
+"loading"
+).style.display =
+"none";
 
 
-        updateTotal();
+document.getElementById(
+"orderArea"
+).style.display =
+"block";
 
 
-    } catch (error) {
+updateTotal();
 
-        console.error(error);
 
-        showError(
-            "Server එකට connect වෙන්න බැරි වුණා."
-        );
+} catch (error) {
 
-    }
+console.error(error);
+
+showError(
+"Server එකට connect වෙන්න බැරි වුණා."
+);
+
+}
 
 }
 
 
 function changeQty(change) {
 
-    quantity += change;
+quantity += change;
 
 
-    if (quantity < 1) {
-        quantity = 1;
-    }
+if (quantity < 1) {
+quantity = 1;
+}
 
 
-    if (
-        quantity > maxStock
-    ) {
-        quantity = maxStock;
-    }
+if (quantity > maxStock) {
+quantity = maxStock;
+}
 
 
-    document.getElementById(
-        "quantity"
-    ).textContent =
-        quantity;
+document.getElementById(
+"quantity"
+).textContent =
+quantity;
 
 
-    updateTotal();
+updateTotal();
 
 }
 
 
 function updateTotal() {
 
-    const total =
-        productPrice *
-        quantity;
+const total =
+productPrice * quantity;
 
 
-    document.getElementById(
-        "totalPrice"
-    ).textContent =
-        "Rs. " +
-        total.toLocaleString();
+document.getElementById(
+"totalPrice"
+).textContent =
+"Rs. " +
+total.toLocaleString();
 
 }
 
 
 async function placeOrder() {
 
-    const name =
-        document.getElementById(
-            "customerName"
-        ).value.trim();
+const name =
+document.getElementById(
+"customerName"
+).value.trim();
 
 
-    const phone =
-        document.getElementById(
-            "phone"
-        ).value.trim();
+const phone =
+document.getElementById(
+"phone"
+).value.trim();
 
 
-    const whatsapp =
-        document.getElementById(
-            "whatsapp"
-        ).value.trim();
+const whatsapp =
+document.getElementById(
+"whatsapp"
+).value.trim();
 
 
-    const address =
-        document.getElementById(
-            "address"
-        ).value.trim();
+const address =
+document.getElementById(
+"address"
+).value.trim();
 
 
-    const city =
-        document.getElementById(
-            "city"
-        ).value.trim();
+const city =
+document.getElementById(
+"city"
+).value.trim();
 
 
-    const note =
-        document.getElementById(
-            "note"
-        ).value.trim();
+const note =
+document.getElementById(
+"note"
+).value.trim();
 
 
-    if (!name) {
+if (!name) {
 
-        alert(
-            "කරුණාකර ඔබගේ නම ඇතුළත් කරන්න."
-        );
+alert("කරුණාකර නම ඇතුළත් කරන්න.");
 
-        return;
+return;
 
-    }
+}
 
 
-    if (!phone) {
+if (!phone) {
 
-        alert(
-            "කරුණාකර Phone Number එක ඇතුළත් කරන්න."
-        );
+alert("කරුණාකර Phone Number එක ඇතුළත් කරන්න.");
 
-        return;
+return;
 
-    }
+}
 
 
-    if (!address) {
+if (!address) {
 
-        alert(
-            "කරුණාකර Address එක ඇතුළත් කරන්න."
-        );
+alert("කරුණාකර Address එක ඇතුළත් කරන්න.");
 
-        return;
+return;
 
-    }
+}
 
 
-    if (!city) {
+if (!city) {
 
-        alert(
-            "කරුණාකර City එක ඇතුළත් කරන්න."
-        );
+alert("කරුණාකර City එක ඇතුළත් කරන්න.");
 
-        return;
+return;
 
-    }
+}
 
 
-    const button =
-        document.querySelector(
-            ".place-order"
-        );
+const button =
+document.getElementById(
+"placeOrderButton"
+);
 
 
-    button.disabled = true;
+button.disabled = true;
 
-    button.textContent =
-        "⏳ Sending Order...";
+button.textContent =
+"⏳ Sending...";
 
 
-    try {
+try {
 
-        const response =
-            await fetch(
-                API,
-                {
+const response =
+await fetch(
+API,
+{
 
-                    method: "POST",
+method: "POST",
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+headers: {
+"Content-Type":
+"application/json"
+},
 
-                    body:
-                        JSON.stringify({
+body:
+JSON.stringify({
 
-                            action:
-                                "create_order",
+action:
+"create_order",
 
-                            store_slug:
-                                storeSlug,
+store_slug:
+storeSlug,
 
-                            product_id:
-                                productId,
+product_id:
+productId,
 
-                            customer_name:
-                                name,
+customer_name:
+name,
 
-                            phone:
-                                phone,
+phone:
+phone,
 
-                            whatsapp:
-                                whatsapp,
+whatsapp:
+whatsapp,
 
-                            address:
-                                address,
+address:
+address,
 
-                            city:
-                                city,
+city:
+city,
 
-                            quantity:
-                                quantity,
+quantity:
+quantity,
 
-                            note:
-                                note
+note:
+note
 
-                        })
+})
 
-                }
-            );
+}
+);
 
 
-        const result =
-            await response.json();
+const result =
+await response.json();
 
 
-        if (
-            result.success
-        ) {
-              if (result.success) {
+if (result.success) {
 
-    document.getElementById(
-        "orderArea"
-    ).style.display = "none";
 
-    document.getElementById(
-        "successArea"
-    ).style.display = "block";
+document.getElementById(
+"orderArea"
+).style.display =
+"none";
 
-    document.getElementById(
-        "orderId"
-    ).textContent =
-        "Order ID: #" + result.order_id;
 
-    document.getElementById(
-        "backStore"
-    ).href =
-        "shop.html?store=" +
-        encodeURIComponent(storeSlug);
+document.getElementById(
+"successArea"
+).style.display =
+"block";
 
 
-    // WhatsApp
+document.getElementById(
+"orderId"
+).textContent =
+"Order ID: #" +
+result.order_id;
 
-    const ownerWhatsApp =
-        result.business_whatsapp || "";
 
-    if (ownerWhatsApp) {
+document.getElementById(
+"backStore"
+).href =
+"shop.html?store=" +
+encodeURIComponent(
+storeSlug
+);
 
-        let whatsappNumber =
-            ownerWhatsApp.replace(
-                /[^0-9]/g,
-                ""
-            );
 
-        if (
-            whatsappNumber.startsWith("0")
-        ) {
+// ==============================
+// WHATSAPP
+// ==============================
 
-            whatsappNumber =
-                "94" +
-                whatsappNumber.substring(1);
+let whatsappNumber =
+ownerWhatsApp.replace(
+/[^0-9]/g,
+""
+);
 
-        }
 
-        const message =
+if (
+whatsappNumber.startsWith("0")
+) {
+
+whatsappNumber =
+"94" +
+whatsappNumber.substring(1);
+
+}
+
+
+const message =
 `🛒 NEW ORDER
 
 Order ID: #${result.order_id}
@@ -890,173 +888,80 @@ Order ID: #${result.order_id}
 
 📝 Note: ${note || "None"}`;
 
-        const whatsappURL =
-            "https://wa.me/" +
-            whatsappNumber +
-            "?text=" +
-            encodeURIComponent(message);
 
-        window.location.href =
-            whatsappURL;
-    }
+const whatsappURL =
+"https://wa.me/" +
+whatsappNumber +
+"?text=" +
+encodeURIComponent(
+message
+);
+
+
+document.getElementById(
+"whatsappButton"
+).href =
+whatsappURL;
+
+
+// Automatically open WhatsApp
+
+if (whatsappNumber) {
+
+window.location.href =
+whatsappURL;
+
+}
+
+
+} else {
+
+
+alert(
+"❌ " +
+(
+result.error ||
+"Order failed"
+)
+);
+
+
+button.disabled = false;
+
+button.textContent =
+"✅ Place Order";
 
 }
 
 
-    // Store back button
-    document.getElementById(
-        "backStore"
-    ).href =
-        "shop.html?store=" +
-        encodeURIComponent(storeSlug);
+} catch (error) {
 
+console.error(error);
 
-    // =====================================
-    // WHATSAPP MESSAGE
-    // =====================================
+alert(
+"❌ Server error"
+);
 
-    const ownerWhatsApp =
-        result.business_whatsapp || "";
+button.disabled = false;
 
-
-    if (ownerWhatsApp) {
-
-        let whatsappNumber =
-            ownerWhatsApp.replace(
-                /[^0-9]/g,
-                ""
-            );
-
-
-        // Sri Lankan 07XXXXXXXX
-        if (
-            whatsappNumber.startsWith("0")
-        ) {
-
-            whatsappNumber =
-                "94" +
-                whatsappNumber.substring(1);
-
-        }
-
-
-        const message =
-`🛒 NEW ORDER
-
-Order ID: #${result.order_id}
-
-📦 Product: ${productName}
-🔢 Quantity: ${quantity}
-
-👤 Customer: ${name}
-📱 Phone: ${phone}
-💬 WhatsApp: ${whatsapp}
-
-🏠 Address: ${address}
-🏙️ City: ${city}
-
-💰 Total: Rs. ${(
-    productPrice * quantity
-).toLocaleString()}
-
-📝 Note: ${note || "None"}`;
-
-
-        const whatsappURL =
-            "https://wa.me/" +
-            whatsappNumber +
-            "?text=" +
-            encodeURIComponent(
-                message
-            );
-
-
-        // Open WhatsApp
-        window.location.href =
-            whatsappURL;
-
-    }
+button.textContent =
+"✅ Place Order";
 
 }
-
-            document.getElementById(
-                "orderArea"
-            ).style.display =
-                "none";
-
-
-            document.getElementById(
-                "successArea"
-            ).style.display =
-                "block";
-
-
-            document.getElementById(
-                "orderId"
-            ).textContent =
-                "Order ID: #" +
-                result.order_id;
-
-
-            document.getElementById(
-                "backStore"
-            ).href =
-                "shop.html?store=" +
-                encodeURIComponent(
-                    storeSlug
-                );
-
-        }
-        else {
-
-            alert(
-                "❌ " +
-                (
-                    result.error ||
-                    "Order failed"
-                )
-            );
-
-
-            button.disabled = false;
-
-            button.textContent =
-                "✅ Place Order";
-
-        }
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "❌ Server error"
-        );
-
-
-        button.disabled = false;
-
-        button.textContent =
-            "✅ Place Order";
-
-    }
 
 }
 
 
 function showError(message) {
 
-    document.getElementById(
-        "loading"
-    ).innerHTML =
-        "❌ " +
-        message;
+document.getElementById(
+"loading"
+).innerHTML =
+"❌ " + message;
 
 }
 
 </script>
-
 
 </body>
 
