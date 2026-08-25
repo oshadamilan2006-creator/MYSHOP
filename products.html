@@ -29,11 +29,9 @@ header {
     height: 70px;
     background: #11111b;
     border-bottom: 1px solid #292936;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 0 6%;
 }
 
@@ -46,10 +44,6 @@ header {
 .back {
     color: #aaa;
     text-decoration: none;
-}
-
-.back:hover {
-    color: white;
 }
 
 .container {
@@ -92,15 +86,11 @@ label {
 input,
 textarea {
     width: 100%;
-
     background: #0d0d14;
     color: white;
-
     border: 1px solid #353542;
     border-radius: 9px;
-
     padding: 13px;
-
     font-size: 15px;
     outline: none;
 }
@@ -115,20 +105,35 @@ textarea {
     resize: vertical;
 }
 
+/* File input */
+
+input[type="file"] {
+    padding: 12px;
+    cursor: pointer;
+}
+
+.preview-box {
+    margin-top: 15px;
+    display: none;
+}
+
+.preview-box img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #353542;
+}
+
 .add-button {
     width: 100%;
-
     padding: 15px;
-
     border: none;
     border-radius: 10px;
-
     background: #8b5cf6;
     color: white;
-
     font-size: 16px;
     font-weight: bold;
-
     cursor: pointer;
 }
 
@@ -136,20 +141,11 @@ textarea {
     background: #7c3aed;
 }
 
-.add-button:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
-
 .message {
     display: none;
-
     padding: 13px;
-
     margin-bottom: 20px;
-
     border-radius: 9px;
-
     text-align: center;
 }
 
@@ -179,8 +175,15 @@ textarea {
     background: #14141d;
     border: 1px solid #292936;
     border-radius: 12px;
-
     padding: 18px;
+    margin-bottom: 12px;
+}
+
+.product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
     margin-bottom: 12px;
 }
 
@@ -274,6 +277,8 @@ textarea {
         <form id="productForm">
 
 
+            <!-- PRODUCT NAME -->
+
             <div class="form-group">
 
                 <label>
@@ -289,6 +294,8 @@ textarea {
 
             </div>
 
+
+            <!-- PRICE -->
 
             <div class="form-group">
 
@@ -308,6 +315,8 @@ textarea {
             </div>
 
 
+            <!-- STOCK -->
+
             <div class="form-group">
 
                 <label>
@@ -326,6 +335,8 @@ textarea {
             </div>
 
 
+            <!-- DESCRIPTION -->
+
             <div class="form-group">
 
                 <label>
@@ -340,20 +351,46 @@ textarea {
             </div>
 
 
+            <!-- IMAGE -->
+
             <div class="form-group">
 
                 <label>
-                    🖼️ Product Image URL
+                    🖼️ Product Image
                 </label>
 
                 <input
-                    type="url"
-                    id="image"
-                    placeholder="https://example.com/image.jpg"
+                    type="file"
+                    id="productImage"
+                    accept="image/*"
                 >
+
+                <p style="
+                    color:#777;
+                    margin-top:8px;
+                    font-size:13px;
+                ">
+                    Phone Gallery / Photos / Files වලින්
+                    photo එකක් තෝරන්න.
+                </p>
+
+
+                <div
+                    class="preview-box"
+                    id="previewBox"
+                >
+
+                    <img
+                        id="imagePreview"
+                        alt="Image Preview"
+                    >
+
+                </div>
 
             </div>
 
+
+            <!-- ADD BUTTON -->
 
             <button
                 type="submit"
@@ -368,6 +405,8 @@ textarea {
 
     </div>
 
+
+    <!-- PRODUCTS -->
 
     <div class="products-section">
 
@@ -396,9 +435,9 @@ const API =
     "https://myshop-api.oshadamilan2006.workers.dev/";
 
 
-/* =========================================
+/* ==========================================
    CHECK LOGIN
-========================================= */
+========================================== */
 
 const savedBusiness =
     localStorage.getItem(
@@ -435,204 +474,294 @@ catch (error) {
 }
 
 
-/* =========================================
+/* ==========================================
+   IMAGE SELECT + PREVIEW
+========================================== */
+
+const imageInput =
+    document.getElementById(
+        "productImage"
+    );
+
+
+const imagePreview =
+    document.getElementById(
+        "imagePreview"
+    );
+
+
+const previewBox =
+    document.getElementById(
+        "previewBox"
+    );
+
+
+imageInput.addEventListener(
+    "change",
+    function () {
+
+        const file =
+            this.files[0];
+
+
+        if (!file) {
+
+            previewBox.style.display =
+                "none";
+
+            imagePreview.src = "";
+
+            return;
+
+        }
+
+
+        if (
+            !file.type.startsWith(
+                "image/"
+            )
+        ) {
+
+            alert(
+                "කරුණාකර image එකක් තෝරන්න."
+            );
+
+            this.value = "";
+
+            return;
+
+        }
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function (event) {
+
+                imagePreview.src =
+                    event.target.result;
+
+                previewBox.style.display =
+                    "block";
+
+            };
+
+
+        reader.readAsDataURL(
+            file
+        );
+
+    }
+);
+
+
+/* ==========================================
    ADD PRODUCT
-========================================= */
+========================================== */
 
 document
-.getElementById("productForm")
-.addEventListener(
-    "submit",
-    async function(e) {
+    .getElementById("productForm")
+    .addEventListener(
+        "submit",
+        async function (e) {
 
-        e.preventDefault();
-
-
-        const name =
-            document
-            .getElementById("name")
-            .value
-            .trim();
+            e.preventDefault();
 
 
-        const price =
-            Number(
+            const name =
                 document
-                .getElementById("price")
+                .getElementById("name")
                 .value
-            );
+                .trim();
 
 
-        const stock =
-            Number(
-                document
-                .getElementById("stock")
-                .value
-            );
-
-
-        const description =
-            document
-            .getElementById("description")
-            .value
-            .trim();
-
-
-        const image =
-            document
-            .getElementById("image")
-            .value
-            .trim();
-
-
-        const message =
-            document
-            .getElementById("message");
-
-
-        const button =
-            document
-            .getElementById("addButton");
-
-
-        button.disabled = true;
-
-        button.textContent =
-            "⏳ Saving...";
-
-
-        message.className =
-            "message";
-
-        message.style.display =
-            "block";
-
-        message.textContent =
-            "⏳ Product එක save කරමින්..." ;
-
-
-        try {
-
-
-            const response =
-                await fetch(
-                    API,
-                    {
-
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                action:
-                                    "add_product",
-
-                                business_id:
-                                    business.id,
-
-                                name:
-                                    name,
-
-                                price:
-                                    price,
-
-                                stock:
-                                    stock,
-
-                                description:
-                                    description,
-
-                                image_url:
-                                    image
-
-                            })
-
-                    }
+            const price =
+                Number(
+                    document
+                    .getElementById("price")
+                    .value
                 );
 
 
-            const result =
-                await response.json();
+            const stock =
+                Number(
+                    document
+                    .getElementById("stock")
+                    .value
+                );
 
 
-            if (result.success) {
-
-
-                message.className =
-                    "message success";
-
-
-                message.textContent =
-                    "✅ Product එක සාර්ථකව එකතු කළා!";
-
-
+            const description =
                 document
-                .getElementById(
-                    "productForm"
-                )
-                .reset();
+                .getElementById("description")
+                .value
+                .trim();
 
 
+            const message =
                 document
-                .getElementById(
-                    "stock"
-                )
-                .value = "0";
+                .getElementById("message");
 
 
-                loadProducts();
+            const button =
+                document
+                .getElementById("addButton");
+
+
+            button.disabled = true;
+
+            button.textContent =
+                "⏳ Saving...";
+
+
+            try {
+
+
+                /*
+                 * දැනට image එක upload
+                 * කරන්නේ නැහැ.
+                 *
+                 * Gallery එකෙන් select කරපු
+                 * image එක preview වෙනවා.
+                 */
+
+
+                const response =
+                    await fetch(
+                        API,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    action:
+                                        "add_product",
+
+                                    business_id:
+                                        business.id,
+
+                                    name:
+                                        name,
+
+                                    price:
+                                        price,
+
+                                    stock:
+                                        stock,
+
+                                    description:
+                                        description,
+
+                                    image_url:
+                                        ""
+
+                                })
+
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (
+                    result.success
+                ) {
+
+                    message.className =
+                        "message success";
+
+                    message.style.display =
+                        "block";
+
+                    message.textContent =
+                        "✅ Product එක සාර්ථකව එකතු කළා!";
+
+
+                    document
+                        .getElementById(
+                            "productForm"
+                        )
+                        .reset();
+
+
+                    previewBox.style.display =
+                        "none";
+
+                    imagePreview.src = "";
+
+
+                    document
+                        .getElementById(
+                            "stock"
+                        )
+                        .value = "0";
+
+
+                    loadProducts();
+
+                }
+                else {
+
+                    message.className =
+                        "message error";
+
+                    message.style.display =
+                        "block";
+
+                    message.textContent =
+                        "❌ " +
+                        (
+                            result.error ||
+                            "Product එක එකතු කරන්න බැරි වුණා."
+                        );
+
+                }
+
 
             }
-            else {
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
 
                 message.className =
                     "message error";
 
+                message.style.display =
+                    "block";
 
                 message.textContent =
-                    "❌ " +
-                    (
-                        result.error ||
-                        "Product එක එකතු කරන්න බැරි වුණා."
-                    );
+                    "❌ Server එකට සම්බන්ධ වෙන්න බැරි වුණා.";
 
             }
 
 
-        }
-        catch (error) {
+            button.disabled =
+                false;
 
-            console.error(error);
-
-
-            message.className =
-                "message error";
-
-
-            message.textContent =
-                "❌ Server එකට සම්බන්ධ වෙන්න බැරි වුණා.";
+            button.textContent =
+                "➕ Product එක එකතු කරන්න";
 
         }
+    );
 
 
-        button.disabled = false;
-
-        button.textContent =
-            "➕ Product එක එකතු කරන්න";
-
-    }
-
-);
-
-
-/* =========================================
+/* ==========================================
    LOAD PRODUCTS
-========================================= */
+========================================== */
 
 async function loadProducts() {
 
@@ -670,8 +799,8 @@ async function loadProducts() {
 
                         })
 
-                    }
-                );
+                }
+            );
 
 
         const result =
@@ -696,7 +825,7 @@ async function loadProducts() {
 
 
         result.products.forEach(
-            function(product) {
+            function (product) {
 
 
                 const div =
@@ -709,28 +838,57 @@ async function loadProducts() {
                     "product";
 
 
+                let imageHTML = "";
+
+
+                if (
+                    product.image_url
+                ) {
+
+                    imageHTML = `
+                        <img
+                            class="product-image"
+                            src="${escapeHTML(product.image_url)}"
+                            alt="${escapeHTML(product.name)}"
+                        >
+                    `;
+
+                }
+
+
                 div.innerHTML = `
+
+                    ${imageHTML}
 
                     <div class="product-name">
                         ${escapeHTML(product.name)}
                     </div>
 
                     <div class="product-price">
-                        Rs. ${Number(product.price).toLocaleString()}
+                        Rs.
+                        ${Number(product.price).toLocaleString()}
                     </div>
 
                     <div class="product-description">
-                        ${escapeHTML(product.description || "")}
+                        ${escapeHTML(
+                            product.description || ""
+                        )}
                     </div>
 
-                    <div style="color:#777;margin-top:8px;">
-                        Stock: ${product.stock}
+                    <div style="
+                        color:#777;
+                        margin-top:8px;
+                    ">
+                        Stock:
+                        ${product.stock}
                     </div>
 
                 `;
 
 
-                list.appendChild(div);
+                list.appendChild(
+                    div
+                );
 
             }
         );
@@ -739,7 +897,10 @@ async function loadProducts() {
     }
     catch (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
+
 
         list.innerHTML =
             '<div class="empty">Products load කරන්න බැරි වුණා.</div>';
@@ -749,32 +910,48 @@ async function loadProducts() {
 }
 
 
-/* =========================================
+/* ==========================================
    HTML ESCAPE
-========================================= */
+========================================== */
 
 function escapeHTML(value) {
 
     return String(value)
 
-        .replaceAll("&", "&amp;")
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
 
-        .replaceAll("<", "&lt;")
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
 
-        .replaceAll(">", "&gt;")
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
 
-        .replaceAll('"', "&quot;")
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
 
-        .replaceAll("'", "&#039;");
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 
 }
 
 
-/* =========================================
+/* ==========================================
    START
-========================================= */
+========================================== */
 
 loadProducts();
+
 
 </script>
 
