@@ -1,204 +1,189 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MYSHOP - ගිණුමක් සාදන්න</title>
+<title>MYSHOP - Login</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
 
-        body {
-            font-family: Arial, "Noto Sans Sinhala", sans-serif;
-            background: #0b0b12;
-            color: white;
-            min-height: 100vh;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 7%;
-            background: #11111b;
-            border-bottom: 1px solid #292936;
-        }
+body {
+    font-family: Arial, "Noto Sans Sinhala", sans-serif;
+    background: #0b0b12;
+    color: white;
+    min-height: 100vh;
+}
 
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #a855f7;
-        }
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 7%;
+    background: #11111b;
+    border-bottom: 1px solid #292936;
+}
 
-        .language {
-            background: #1d1d29;
-            color: white;
-            border: 1px solid #444;
-            padding: 9px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #a855f7;
+}
 
-        .container {
-            min-height: calc(100vh - 75px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
+.language {
+    background: #1d1d29;
+    color: white;
+    border: 1px solid #444;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
 
-        .register-box {
-            width: 100%;
-            max-width: 500px;
-            background: #14141d;
-            border: 1px solid #292936;
-            border-radius: 18px;
-            padding: 35px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-        }
+.container {
+    min-height: calc(100vh - 75px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+}
 
-        .register-box h1 {
-            text-align: center;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
+.login-box {
+    width: 100%;
+    max-width: 450px;
+    background: #14141d;
+    border: 1px solid #292936;
+    border-radius: 18px;
+    padding: 35px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
 
-        .subtitle {
-            text-align: center;
-            color: #9999a8;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
+.login-box h1 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
 
-        .form-group {
-            margin-bottom: 18px;
-        }
+.subtitle {
+    text-align: center;
+    color: #9999a8;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #ddd;
-        }
+.form-group {
+    margin-bottom: 20px;
+}
 
-        input {
-            width: 100%;
-            padding: 14px;
-            background: #0d0d14;
-            color: white;
-            border: 1px solid #353542;
-            border-radius: 9px;
-            outline: none;
-            font-size: 15px;
-        }
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ddd;
+    font-size: 14px;
+}
 
-        input:focus {
-            border-color: #8b5cf6;
-        }
+input {
+    width: 100%;
+    padding: 14px;
+    background: #0d0d14;
+    color: white;
+    border: 1px solid #353542;
+    border-radius: 9px;
+    outline: none;
+    font-size: 15px;
+}
 
-        .terms {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin: 20px 0;
-            color: #9999a8;
-            font-size: 13px;
-            line-height: 1.5;
-        }
+input:focus {
+    border-color: #8b5cf6;
+}
 
-        .terms input {
-            width: auto;
-            margin-top: 3px;
-        }
+.login-btn {
+    width: 100%;
+    padding: 15px;
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        .terms a {
-            color: #a855f7;
-            text-decoration: none;
-        }
+.login-btn:hover {
+    background: #7c3aed;
+}
 
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: #8b5cf6;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.login-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
 
-        .submit-btn:hover {
-            background: #7c3aed;
-        }
+.message {
+    display: none;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    text-align: center;
+    font-size: 14px;
+}
 
-        .login-text {
-            text-align: center;
-            margin-top: 22px;
-            color: #9999a8;
-            font-size: 14px;
-        }
+.success {
+    display: block;
+    background: #12351f;
+    border: 1px solid #237a43;
+    color: #7ee2a8;
+}
 
-        .login-text a {
-            color: #a855f7;
-            text-decoration: none;
-            font-weight: bold;
-        }
+.error {
+    display: block;
+    background: #351414;
+    border: 1px solid #7a2323;
+    color: #ff8f8f;
+}
 
-        .message {
-            display: none;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 18px;
-            text-align: center;
-            font-size: 14px;
-        }
+.register-text {
+    text-align: center;
+    margin-top: 22px;
+    color: #9999a8;
+    font-size: 14px;
+}
 
-        .success {
-            background: #12351f;
-            border: 1px solid #237a43;
-            color: #7ee2a8;
-        }
+.register-text a {
+    color: #a855f7;
+    text-decoration: none;
+    font-weight: bold;
+}
 
-        .error {
-            background: #351414;
-            border: 1px solid #7a2323;
-            color: #ff8f8f;
-        }
+.back {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    color: #777;
+    text-decoration: none;
+    font-size: 14px;
+}
 
-        @media (max-width: 600px) {
-
-            header {
-                padding: 15px 5%;
-            }
-
-            .logo {
-                font-size: 23px;
-            }
-
-            .register-box {
-                padding: 25px 20px;
-            }
-
-            .register-box h1 {
-                font-size: 27px;
-            }
-        }
-    </style>
+</style>
 </head>
 
 <body>
 
 <header>
 
-    <div class="logo">MYSHOP</div>
+    <div class="logo">
+        MYSHOP
+    </div>
 
-    <button class="language" onclick="changeLanguage()">
+    <button
+        class="language"
+        onclick="changeLanguage()"
+        type="button"
+    >
         🇬🇧 English
     </button>
 
@@ -207,35 +192,21 @@
 
 <div class="container">
 
-    <div class="register-box">
+    <div class="login-box">
 
-        <h1 id="title">ගිණුමක් සාදන්න</h1>
+        <h1 id="title">
+            පිවිසෙන්න
+        </h1>
 
         <p class="subtitle" id="subtitle">
-            ඔබේ ව්‍යාපාරය සඳහා MYSHOP Online වෙළඳසැලක් සාදන්න.
+            ඔබේ MYSHOP ගිණුමට පිවිසෙන්න.
         </p>
 
 
         <div id="message" class="message"></div>
 
 
-        <form id="registerForm">
-
-            <div class="form-group">
-
-                <label id="businessLabel">
-                    🏪 ව්‍යාපාරයේ නම
-                </label>
-
-                <input
-                    type="text"
-                    id="businessName"
-                    placeholder="උදා: ABC Fashion"
-                    required
-                >
-
-            </div>
-
+        <form id="loginForm">
 
             <div class="form-group">
 
@@ -247,22 +218,6 @@
                     type="email"
                     id="email"
                     placeholder="example@gmail.com"
-                    required
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label id="whatsappLabel">
-                    📱 WhatsApp Number
-                </label>
-
-                <input
-                    type="tel"
-                    id="whatsapp"
-                    placeholder="07XXXXXXXX"
                     required
                 >
 
@@ -285,50 +240,34 @@
             </div>
 
 
-            <div class="form-group">
-
-                <label id="confirmLabel">
-                    🔐 Password නැවත ඇතුළත් කරන්න
-                </label>
-
-                <input
-                    type="password"
-                    id="confirmPassword"
-                    placeholder="Confirm Password"
-                    required
-                >
-
-            </div>
-
-
-            <label class="terms">
-
-                <input type="checkbox" id="terms" required>
-
-                <span id="termsText">
-                    මම MYSHOP හි Terms & Conditions වලට එකඟ වෙමි.
-                </span>
-
-            </label>
-
-
             <button
                 type="submit"
-                class="submit-btn"
-                id="submitButton"
+                class="login-btn"
+                id="loginButton"
             >
-                ගිණුම සාදන්න →
+                පිවිසෙන්න →
             </button>
 
         </form>
 
 
-        <div class="login-text" id="loginText">
+        <div class="register-text" id="registerText">
 
-            දැනටමත් ගිණුමක් තියෙනවාද?
-            <a href="login.html">පිවිසෙන්න</a>
+            ගිණුමක් නැද්ද?
+            <a href="register.html">
+                ගිණුමක් සාදන්න
+            </a>
 
         </div>
+
+
+        <a
+            href="index.html"
+            class="back"
+            id="backHome"
+        >
+            ← මුල් පිටුවට
+        </a>
 
     </div>
 
@@ -340,166 +279,316 @@
 let sinhala = true;
 
 
-document.getElementById("registerForm").addEventListener("submit", function(e) {
+/* =========================================
+   LOGIN
+========================================= */
+
+document
+.getElementById("loginForm")
+.addEventListener("submit", async function(e) {
 
     e.preventDefault();
 
-    const businessName =
-        document.getElementById("businessName").value.trim();
 
     const email =
-        document.getElementById("email").value.trim();
+        document
+        .getElementById("email")
+        .value
+        .trim();
 
-    const whatsapp =
-        document.getElementById("whatsapp").value.trim();
 
     const password =
-        document.getElementById("password").value;
+        document
+        .getElementById("password")
+        .value;
 
-    const confirmPassword =
-        document.getElementById("confirmPassword").value;
 
     const message =
-        document.getElementById("message");
+        document
+        .getElementById("message");
 
 
-    if (password !== confirmPassword) {
-
-        message.style.display = "block";
-
-        message.className = "message error";
-
-        message.textContent = sinhala
-            ? "❌ Password දෙක එක සමාන නැහැ."
-            : "❌ Passwords do not match.";
-
-        return;
-    }
+    const loginButton =
+        document
+        .getElementById("loginButton");
 
 
-    if (password.length < 6) {
-
-        message.style.display = "block";
-
-        message.className = "message error";
-
-        message.textContent = sinhala
-            ? "❌ Password එක අවම වශයෙන් අකුරු 6ක් විය යුතුයි."
-            : "❌ Password must be at least 6 characters.";
-
-        return;
-    }
+    loginButton.disabled = true;
 
 
-    /*
-        දැන් database එකට save කරන්නේ නැහැ.
-
-        ඊළඟ පියවරේදී මේ කොටස
-        Cloudflare Worker + D1 Database
-        එකට connect කරනවා.
-    */
+    loginButton.textContent =
+        sinhala
+        ? "⏳ පිවිසෙමින්..."
+        : "⏳ Logging in...";
 
 
     message.style.display = "block";
 
-    message.className = "message success";
+    message.className =
+        "message";
 
-    message.textContent = sinhala
-        ? "✅ Registration සාර්ථකයි! Database එක connect කළ පසු account එක save වේ."
-        : "✅ Registration successful! The account will be saved after connecting the database.";
+    message.textContent =
+        sinhala
+        ? "⏳ කරුණාකර රැඳී සිටින්න..."
+        : "⏳ Please wait...";
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "https://myshop-api.oshadamilan2006.workers.dev/",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        action:
+                            "login",
+
+                        email:
+                            email,
+
+                        password:
+                            password
+
+                    })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        /* =========================
+           SUCCESS
+        ========================= */
+
+        if (result.success) {
+
+
+            message.className =
+                "message success";
+
+
+            message.textContent =
+                sinhala
+                ? "✅ සාර්ථකව පිවිසුණා!"
+                : "✅ Login successful!";
+
+
+            /*
+             * Save logged-in business
+             */
+
+            localStorage.setItem(
+                "myshop_business",
+                JSON.stringify(
+                    result.business
+                )
+            );
+
+
+            /*
+             * Dashboard එකට යන්න
+             */
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "dashboard.html";
+
+            }, 700);
+
+        }
+
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        else {
+
+            message.className =
+                "message error";
+
+
+            message.textContent =
+                "❌ " +
+                (
+                    result.error ||
+                    (
+                        sinhala
+                        ? "Login failed."
+                        : "Login failed."
+                    )
+                );
+
+        }
+
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Login error:",
+            error
+        );
+
+
+        message.className =
+            "message error";
+
+
+        message.textContent =
+            sinhala
+            ? "❌ Server එකට සම්බන්ධ වීමට නොහැකි වුණා."
+            : "❌ Could not connect to server.";
+
+    }
+
+
+    loginButton.disabled = false;
+
+
+    loginButton.textContent =
+        sinhala
+        ? "පිවිසෙන්න →"
+        : "Login →";
 
 });
 
+
+/* =========================================
+   LANGUAGE
+========================================= */
 
 function changeLanguage() {
 
     sinhala = !sinhala;
 
+
     const button =
-        document.querySelector(".language");
+        document.querySelector(
+            ".language"
+        );
 
 
     if (sinhala) {
 
-        document.documentElement.lang = "si";
+        document.documentElement.lang =
+            "si";
 
-        button.innerHTML = "🇬🇧 English";
+
+        button.innerHTML =
+            "🇬🇧 English";
 
 
-        document.getElementById("title").textContent =
-            "ගිණුමක් සාදන්න";
+        document.getElementById(
+            "title"
+        ).textContent =
+            "පිවිසෙන්න";
 
-        document.getElementById("subtitle").textContent =
-            "ඔබේ ව්‍යාපාරය සඳහා MYSHOP Online වෙළඳසැලක් සාදන්න.";
 
-        document.getElementById("businessLabel").textContent =
-            "🏪 ව්‍යාපාරයේ නම";
+        document.getElementById(
+            "subtitle"
+        ).textContent =
+            "ඔබේ MYSHOP ගිණුමට පිවිසෙන්න.";
 
-        document.getElementById("businessName").placeholder =
-            "උදා: ABC Fashion";
 
-        document.getElementById("emailLabel").textContent =
+        document.getElementById(
+            "emailLabel"
+        ).textContent =
             "📧 Gmail";
 
-        document.getElementById("whatsappLabel").textContent =
-            "📱 WhatsApp Number";
 
-        document.getElementById("passwordLabel").textContent =
+        document.getElementById(
+            "passwordLabel"
+        ).textContent =
             "🔐 Password";
 
-        document.getElementById("confirmLabel").textContent =
-            "🔐 Password නැවත ඇතුළත් කරන්න";
 
-        document.getElementById("termsText").textContent =
-            "මම MYSHOP හි Terms & Conditions වලට එකඟ වෙමි.";
+        document.getElementById(
+            "loginButton"
+        ).textContent =
+            "පිවිසෙන්න →";
 
-        document.getElementById("submitButton").textContent =
-            "ගිණුම සාදන්න →";
 
-        document.getElementById("loginText").innerHTML =
-            'දැනටමත් ගිණුමක් තියෙනවාද? <a href="login.html">පිවිසෙන්න</a>';
+        document.getElementById(
+            "registerText"
+        ).innerHTML =
+            'ගිණුමක් නැද්ද? <a href="register.html">ගිණුමක් සාදන්න</a>';
+
+
+        document.getElementById(
+            "backHome"
+        ).textContent =
+            "← මුල් පිටුවට";
 
     }
 
+
     else {
 
-        document.documentElement.lang = "en";
+        document.documentElement.lang =
+            "en";
 
-        button.innerHTML = "🇱🇰 සිංහල";
+
+        button.innerHTML =
+            "🇱🇰 සිංහල";
 
 
-        document.getElementById("title").textContent =
-            "Create an Account";
+        document.getElementById(
+            "title"
+        ).textContent =
+            "Login";
 
-        document.getElementById("subtitle").textContent =
-            "Create your MYSHOP online store for your business.";
 
-        document.getElementById("businessLabel").textContent =
-            "🏪 Business Name";
+        document.getElementById(
+            "subtitle"
+        ).textContent =
+            "Login to your MYSHOP account.";
 
-        document.getElementById("businessName").placeholder =
-            "Example: ABC Fashion";
 
-        document.getElementById("emailLabel").textContent =
+        document.getElementById(
+            "emailLabel"
+        ).textContent =
             "📧 Gmail";
 
-        document.getElementById("whatsappLabel").textContent =
-            "📱 WhatsApp Number";
 
-        document.getElementById("passwordLabel").textContent =
+        document.getElementById(
+            "passwordLabel"
+        ).textContent =
             "🔐 Password";
 
-        document.getElementById("confirmLabel").textContent =
-            "🔐 Confirm Password";
 
-        document.getElementById("termsText").textContent =
-            "I agree to MYSHOP Terms & Conditions.";
+        document.getElementById(
+            "loginButton"
+        ).textContent =
+            "Login →";
 
-        document.getElementById("submitButton").textContent =
-            "Create Account →";
 
-        document.getElementById("loginText").innerHTML =
-            'Already have an account? <a href="login.html">Login</a>';
+        document.getElementById(
+            "registerText"
+        ).innerHTML =
+            'Don\'t have an account? <a href="register.html">Create an account</a>';
+
+
+        document.getElementById(
+            "backHome"
+        ).textContent =
+            "← Back to Home";
 
     }
 
@@ -508,4 +597,4 @@ function changeLanguage() {
 </script>
 
 </body>
-  </html>
+</html>
