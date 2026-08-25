@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MYSHOP - ගිණුමක් සාදන්න</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, "Noto Sans Sinhala", sans-serif;
+            background: #0b0b12;
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 7%;
+            background: #11111b;
+            border-bottom: 1px solid #292936;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #a855f7;
+        }
+
+        .language {
+            background: #1d1d29;
+            color: white;
+            border: 1px solid #444;
+            padding: 9px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .container {
+            min-height: calc(100vh - 75px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 500px;
+            background: #14141d;
+            border: 1px solid #292936;
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        }
+
+        .register-box h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #9999a8;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #ddd;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #0d0d14;
+            color: white;
+            border: 1px solid #353542;
+            border-radius: 9px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #8b5cf6;
+        }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 0;
+            color: #9999a8;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .terms input {
+            width: auto;
+            margin-top: 3px;
+        }
+
+        .terms a {
+            color: #a855f7;
+            text-decoration: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #7c3aed;
+        }
+
+        .login-text {
+            text-align: center;
+            margin-top: 22px;
+            color: #9999a8;
+            font-size: 14px;
+        }
+
+        .login-text a {
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .message {
+            display: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #12351f;
+            border: 1px solid #237a43;
+            color: #7ee2a8;
+        }
+
+        .error {
+            background: #351414;
+            border: 1px solid #7a2323;
+            color: #ff8f8f;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 15px 5%;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            .register-box {
+                padding: 25px 20px;
+            }
+
+            .register-box h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">MYSHOP</div>
+
+    <button class="language" onclick="changeLanguage()">
+        🇬🇧 English
+    </button>
+
+</header>
+
+
+<div class="container">
+
+    <div class="register-box">
+
+        <h1 id="title">ගිණුමක් සාදන්න</h1>
+
+        <p class="subtitle" id="subtitle">
+            ඔබේ ව්‍යාපාරය සඳහා MYSHOP Online වෙළඳසැලක් සාදන්න.
+        </p>
+
+
+        <div id="message" class="message"></div>
+
+
+        <form id="registerForm">
+
+            <div class="form-group">
+
+                <label id="businessLabel">
+                    🏪 ව්‍යාපාරයේ නම
+                </label>
+
+                <input
+                    type="text"
+                    id="businessName"
+                    placeholder="උදා: ABC Fashion"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label id="emailLabel">
+                    📧 Gmail
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="example@gmail.com"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label id="whatsappLabel">
+                    📱 WhatsApp Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="whatsapp"
+                    placeholder="07XXXXXXXX"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label id="passwordLabel">
+                    🔐 Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label id="confirmLabel">
+                    🔐 Password නැවත ඇතුළත් කරන්න
+                </label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm Password"
+                    required
+                >
+
+            </div>
+
+
+            <label class="terms">
+
+                <input type="checkbox" id="terms" required>
+
+                <span id="termsText">
+                    මම MYSHOP හි Terms & Conditions වලට එකඟ වෙමි.
+                </span>
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="submit-btn"
+                id="submitButton"
+            >
+                ගිණුම සාදන්න →
+            </button>
+
+        </form>
+
+
+        <div class="login-text" id="loginText">
+
+            දැනටමත් ගිණුමක් තියෙනවාද?
+            <a href="login.html">පිවිසෙන්න</a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let sinhala = true;
+
+
+document.getElementById("registerForm").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const businessName =
+        document.getElementById("businessName").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const whatsapp =
+        document.getElementById("whatsapp").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+    const message =
+        document.getElementById("message");
+
+
+    if (password !== confirmPassword) {
+
+        message.style.display = "block";
+
+        message.className = "message error";
+
+        message.textContent = sinhala
+            ? "❌ Password දෙක එක සමාන නැහැ."
+            : "❌ Passwords do not match.";
+
+        return;
+    }
+
+
+    if (password.length < 6) {
+
+        message.style.display = "block";
+
+        message.className = "message error";
+
+        message.textContent = sinhala
+            ? "❌ Password එක අවම වශයෙන් අකුරු 6ක් විය යුතුයි."
+            : "❌ Password must be at least 6 characters.";
+
+        return;
+    }
+
+
+    /*
+        දැන් database එකට save කරන්නේ නැහැ.
+
+        ඊළඟ පියවරේදී මේ කොටස
+        Cloudflare Worker + D1 Database
+        එකට connect කරනවා.
+    */
+
+
+    message.style.display = "block";
+
+    message.className = "message success";
+
+    message.textContent = sinhala
+        ? "✅ Registration සාර්ථකයි! Database එක connect කළ පසු account එක save වේ."
+        : "✅ Registration successful! The account will be saved after connecting the database.";
+
+});
+
+
+function changeLanguage() {
+
+    sinhala = !sinhala;
+
+    const button =
+        document.querySelector(".language");
+
+
+    if (sinhala) {
+
+        document.documentElement.lang = "si";
+
+        button.innerHTML = "🇬🇧 English";
+
+
+        document.getElementById("title").textContent =
+            "ගිණුමක් සාදන්න";
+
+        document.getElementById("subtitle").textContent =
+            "ඔබේ ව්‍යාපාරය සඳහා MYSHOP Online වෙළඳසැලක් සාදන්න.";
+
+        document.getElementById("businessLabel").textContent =
+            "🏪 ව්‍යාපාරයේ නම";
+
+        document.getElementById("businessName").placeholder =
+            "උදා: ABC Fashion";
+
+        document.getElementById("emailLabel").textContent =
+            "📧 Gmail";
+
+        document.getElementById("whatsappLabel").textContent =
+            "📱 WhatsApp Number";
+
+        document.getElementById("passwordLabel").textContent =
+            "🔐 Password";
+
+        document.getElementById("confirmLabel").textContent =
+            "🔐 Password නැවත ඇතුළත් කරන්න";
+
+        document.getElementById("termsText").textContent =
+            "මම MYSHOP හි Terms & Conditions වලට එකඟ වෙමි.";
+
+        document.getElementById("submitButton").textContent =
+            "ගිණුම සාදන්න →";
+
+        document.getElementById("loginText").innerHTML =
+            'දැනටමත් ගිණුමක් තියෙනවාද? <a href="login.html">පිවිසෙන්න</a>';
+
+    }
+
+    else {
+
+        document.documentElement.lang = "en";
+
+        button.innerHTML = "🇱🇰 සිංහල";
+
+
+        document.getElementById("title").textContent =
+            "Create an Account";
+
+        document.getElementById("subtitle").textContent =
+            "Create your MYSHOP online store for your business.";
+
+        document.getElementById("businessLabel").textContent =
+            "🏪 Business Name";
+
+        document.getElementById("businessName").placeholder =
+            "Example: ABC Fashion";
+
+        document.getElementById("emailLabel").textContent =
+            "📧 Gmail";
+
+        document.getElementById("whatsappLabel").textContent =
+            "📱 WhatsApp Number";
+
+        document.getElementById("passwordLabel").textContent =
+            "🔐 Password";
+
+        document.getElementById("confirmLabel").textContent =
+            "🔐 Confirm Password";
+
+        document.getElementById("termsText").textContent =
+            "I agree to MYSHOP Terms & Conditions.";
+
+        document.getElementById("submitButton").textContent =
+            "Create Account →";
+
+        document.getElementById("loginText").innerHTML =
+            'Already have an account? <a href="login.html">Login</a>';
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
