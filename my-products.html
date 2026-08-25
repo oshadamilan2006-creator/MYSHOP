@@ -81,6 +81,9 @@ h1 {
     border: 1px solid #292936;
     border-radius: 14px;
     padding: 18px;
+}
+
+.product-main {
     display: flex;
     gap: 18px;
     align-items: center;
@@ -133,6 +136,35 @@ h1 {
     line-height: 1.5;
 }
 
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #292936;
+}
+
+.action-btn {
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.edit {
+    background: #2563eb;
+}
+
+.delete {
+    background: #dc2626;
+}
+
+.action-btn:hover {
+    opacity: 0.85;
+}
+
 .empty {
     text-align: center;
     padding: 50px 20px;
@@ -147,6 +179,78 @@ h1 {
     padding: 30px;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    padding: 20px;
+    z-index: 999;
+}
+
+.modal-box {
+    max-width: 500px;
+    margin: 60px auto;
+    background: #15151f;
+    border: 1px solid #292936;
+    border-radius: 16px;
+    padding: 25px;
+}
+
+.modal-box h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #ddd;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    background: #0b0b12;
+    color: white;
+    border: 1px solid #353542;
+    border-radius: 8px;
+    padding: 12px;
+    outline: none;
+}
+
+.form-group textarea {
+    min-height: 90px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.save-btn {
+    flex: 1;
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    background: #8b5cf6;
+    color: white;
+    font-weight: bold;
+}
+
+.cancel-btn {
+    flex: 1;
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    background: #33333f;
+    color: white;
+}
+
 @media(max-width:600px) {
 
     .top {
@@ -154,7 +258,7 @@ h1 {
         flex-direction: column;
     }
 
-    .product {
+    .product-main {
         align-items: flex-start;
     }
 
@@ -164,8 +268,12 @@ h1 {
         height: 80px;
     }
 
-    h1 {
-        font-size: 26px;
+    .actions {
+        flex-direction: column;
+    }
+
+    .action-btn {
+        width: 100%;
     }
 
 }
@@ -228,6 +336,98 @@ h1 {
 </div>
 
 
+<!-- EDIT MODAL -->
+
+<div
+    id="editModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <h2>
+            ✏️ Edit Product
+        </h2>
+
+
+        <div class="form-group">
+
+            <label>
+                Product Name
+            </label>
+
+            <input
+                id="editName"
+                type="text"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Price
+            </label>
+
+            <input
+                id="editPrice"
+                type="number"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Stock
+            </label>
+
+            <input
+                id="editStock"
+                type="number"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                id="editDescription"
+            ></textarea>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="save-btn"
+                onclick="saveEdit()"
+            >
+                💾 Save
+            </button>
+
+            <button
+                class="cancel-btn"
+                onclick="closeEdit()"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
 
 const API =
@@ -270,6 +470,9 @@ try {
 }
 
 
+let currentProductId = null;
+
+
 /* LOAD PRODUCTS */
 
 async function loadProducts() {
@@ -278,6 +481,10 @@ async function loadProducts() {
         document.getElementById(
             "productList"
         );
+
+
+    list.innerHTML =
+        '<div class="loading">⏳ Loading...</div>';
 
 
     try {
@@ -317,15 +524,12 @@ async function loadProducts() {
             !result.success
         ) {
 
-            list.innerHTML = `
-                <div class="empty">
-                    ❌ Products ලබාගන්න බැරි වුණා.
-                    <br><br>
-                    ${escapeHTML(
+            list.innerHTML =
+                `<div class="empty">
+                    ❌ ${escapeHTML(
                         result.error || ""
                     )}
-                </div>
-            `;
+                </div>`;
 
             return;
 
@@ -337,15 +541,17 @@ async function loadProducts() {
             result.products.length === 0
         ) {
 
-            list.innerHTML = `
-                <div class="empty">
+            list.innerHTML =
+                `<div class="empty">
                     📦 තවම Products නැහැ.
                     <br><br>
-                    ඉහළ තියෙන
-                    <b>➕ Add Product</b>
-                    button එකෙන් Product එකක් එකතු කරන්න.
-                </div>
-            `;
+                    <a
+                        href="products.html"
+                        style="color:#c084fc;"
+                    >
+                        ➕ Product එකක් එකතු කරන්න
+                    </a>
+                </div>`;
 
             return;
 
@@ -357,6 +563,7 @@ async function loadProducts() {
 
         result.products.forEach(
             function(product) {
+
 
                 const item =
                     document.createElement(
@@ -396,33 +603,67 @@ async function loadProducts() {
 
                 item.innerHTML = `
 
-                    ${imageHTML}
+                    <div class="product-main">
 
-                    <div class="info">
+                        ${imageHTML}
 
-                        <div class="name">
-                            ${escapeHTML(
-                                product.name
-                            )}
+                        <div class="info">
+
+                            <div class="name">
+                                ${escapeHTML(
+                                    product.name
+                                )}
+                            </div>
+
+                            <div class="price">
+                                Rs.
+                                ${Number(
+                                    product.price
+                                ).toLocaleString()}
+                            </div>
+
+                            <div class="stock">
+                                📦 Stock:
+                                ${product.stock}
+                            </div>
+
+                            <div class="description">
+                                ${escapeHTML(
+                                    product.description || ""
+                                )}
+                            </div>
+
                         </div>
 
-                        <div class="price">
-                            Rs.
-                            ${Number(
-                                product.price
-                            ).toLocaleString()}
-                        </div>
+                    </div>
 
-                        <div class="stock">
-                            📦 Stock:
-                            ${product.stock}
-                        </div>
 
-                        <div class="description">
-                            ${escapeHTML(
-                                product.description || ""
-                            )}
-                        </div>
+                    <div class="actions">
+
+                        <button
+                            class="action-btn edit"
+                            onclick="openEdit(
+                                '${escapeJS(product.id)}',
+                                '${escapeJS(product.name)}',
+                                '${product.price}',
+                                '${product.stock}',
+                                '${escapeJS(
+                                    product.description || ""
+                                )}'
+                            )"
+                        >
+                            ✏️ Edit
+                        </button>
+
+
+                        <button
+                            class="action-btn delete"
+                            onclick="deleteProduct(
+                                '${escapeJS(product.id)}'
+                            )"
+                        >
+                            🗑️ Delete
+                        </button>
 
                     </div>
 
@@ -441,19 +682,301 @@ async function loadProducts() {
 
         console.error(error);
 
-
-        list.innerHTML = `
-            <div class="empty">
+        list.innerHTML =
+            `<div class="empty">
                 ❌ Server එකට connect වෙන්න බැරි වුණා.
-            </div>
-        `;
+            </div>`;
 
     }
 
 }
 
 
-/* SECURITY */
+/* OPEN EDIT */
+
+function openEdit(
+    id,
+    name,
+    price,
+    stock,
+    description
+) {
+
+    currentProductId =
+        id;
+
+
+    document.getElementById(
+        "editName"
+    ).value =
+        name;
+
+
+    document.getElementById(
+        "editPrice"
+    ).value =
+        price;
+
+
+    document.getElementById(
+        "editStock"
+    ).value =
+        stock;
+
+
+    document.getElementById(
+        "editDescription"
+    ).value =
+        description;
+
+
+    document.getElementById(
+        "editModal"
+    ).style.display =
+        "block";
+
+}
+
+
+/* CLOSE EDIT */
+
+function closeEdit() {
+
+    document.getElementById(
+        "editModal"
+    ).style.display =
+        "none";
+
+    currentProductId =
+        null;
+
+}
+
+
+/* SAVE EDIT */
+
+async function saveEdit() {
+
+    if (!currentProductId) {
+        return;
+    }
+
+
+    const name =
+        document.getElementById(
+            "editName"
+        ).value.trim();
+
+
+    const price =
+        Number(
+            document.getElementById(
+                "editPrice"
+            ).value
+        );
+
+
+    const stock =
+        Number(
+            document.getElementById(
+                "editStock"
+            ).value
+        );
+
+
+    const description =
+        document.getElementById(
+            "editDescription"
+        ).value.trim();
+
+
+    if (!name) {
+
+        alert(
+            "Product Name එක දාන්න."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                API,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "update_product",
+
+                            business_id:
+                                business.id,
+
+                            product_id:
+                                currentProductId,
+
+                            name:
+                                name,
+
+                            price:
+                                price,
+
+                            stock:
+                                stock,
+
+                            description:
+                                description
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            result.success
+        ) {
+
+            alert(
+                "✅ Product එක update කළා!"
+            );
+
+            closeEdit();
+
+            loadProducts();
+
+        }
+        else {
+
+            alert(
+                "❌ " +
+                (
+                    result.error ||
+                    "Update failed"
+                )
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Server error"
+        );
+
+    }
+
+}
+
+
+/* DELETE */
+
+async function deleteProduct(id) {
+
+    const confirmDelete =
+        confirm(
+            "මේ Product එක Delete කරන්නද?"
+        );
+
+
+    if (!confirmDelete) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                API,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "delete_product",
+
+                            business_id:
+                                business.id,
+
+                            product_id:
+                                id
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            result.success
+        ) {
+
+            alert(
+                "🗑️ Product එක Delete කළා!"
+            );
+
+            loadProducts();
+
+        }
+        else {
+
+            alert(
+                "❌ " +
+                (
+                    result.error ||
+                    "Delete failed"
+                )
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Server error"
+        );
+
+    }
+
+}
+
+
+/* ESCAPE HTML */
 
 function escapeHTML(value) {
 
@@ -486,6 +1009,33 @@ function escapeHTML(value) {
 
 }
 
+
+/* ESCAPE JS */
+
+function escapeJS(value) {
+
+    return String(value)
+        .replaceAll(
+            "\\",
+            "\\\\"
+        )
+        .replaceAll(
+            "'",
+            "\\'"
+        )
+        .replaceAll(
+            "\n",
+            "\\n"
+        )
+        .replaceAll(
+            "\r",
+            ""
+        );
+
+}
+
+
+/* START */
 
 loadProducts();
 
