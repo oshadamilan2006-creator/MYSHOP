@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>MYSHOP Store</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, "Noto Sans Sinhala", sans-serif;
+    background: #0b0b12;
+    color: white;
+}
+
+header {
+    background: #11111b;
+    border-bottom: 1px solid #292936;
+    padding: 18px 6%;
+    text-align: center;
+}
+
+.logo {
+    color: #a855f7;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.store-name {
+    margin-top: 8px;
+    font-size: 20px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px 18px 60px;
+}
+
+.hero {
+    text-align: center;
+    padding: 30px 10px;
+}
+
+.hero h1 {
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #999;
+}
+
+.products {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.product {
+    background: #15151f;
+    border: 1px solid #292936;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.product img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #22222d;
+}
+
+.no-image {
+    width: 100%;
+    height: 200px;
+    background: #22222d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+}
+
+.product-info {
+    padding: 18px;
+}
+
+.product-name {
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.description {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 42px;
+}
+
+.price {
+    color: #c084fc;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 14px 0;
+}
+
+.stock {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.order-btn {
+    width: 100%;
+    border: none;
+    padding: 13px;
+    border-radius: 9px;
+    background: #8b5cf6;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.order-btn:hover {
+    background: #7c3aed;
+}
+
+.empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: #777;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    border-top: 1px solid #222;
+    color: #666;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        MYSHOP
+    </div>
+
+    <div
+        id="storeName"
+        class="store-name"
+    >
+        Store
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="hero">
+
+        <h1 id="title">
+            🛍️ Online Store
+        </h1>
+
+        <p>
+            ඔබට අවශ්‍ය Product එක තෝරන්න
+        </p>
+
+    </div>
+
+
+    <div
+        id="products"
+        class="products"
+    >
+
+        <div class="loading">
+            ⏳ Products loading...
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    © 2026 MYSHOP
+
+</footer>
+
+
+<script>
+
+const API =
+    "https://myshop-api.oshadamilan2006.workers.dev/";
+
+
+/*
+    Example:
+
+    shop.html?store=abc-shop
+*/
+
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const storeSlug =
+    params.get("store");
+
+
+const productsBox =
+    document.getElementById(
+        "products"
+    );
+
+
+const storeName =
+    document.getElementById(
+        "storeName"
+    );
+
+
+if (!storeSlug) {
+
+    productsBox.innerHTML = `
+        <div class="empty">
+            ❌ Store link එක වැරදියි.
+        </div>
+    `;
+
+} else {
+
+    loadStore();
+
+}
+
+
+async function loadStore() {
+
+    try {
+
+        const response =
+            await fetch(
+                API,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "get_store",
+
+                            store_slug:
+                                storeSlug
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            productsBox.innerHTML = `
+                <div class="empty">
+                    ❌
+                    ${escapeHTML(
+                        result.error ||
+                        "Store not found"
+                    )}
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        storeName.textContent =
+            result.business.business_name;
+
+
+        document.getElementById(
+            "title"
+        ).textContent =
+            "🛍️ " +
+            result.business.business_name;
+
+
+        if (
+            !result.products ||
+            result.products.length === 0
+        ) {
+
+            productsBox.innerHTML = `
+                <div class="empty">
+                    📦 මේ වෙළඳසැලේ තවම Products නැහැ.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        productsBox.innerHTML = "";
+
+
+        result.products.forEach(
+            function(product) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "product";
+
+
+                let imageHTML = `
+                    <div class="no-image">
+                        🖼️ No Image
+                    </div>
+                `;
+
+
+                if (
+                    product.image_url
+                ) {
+
+                    imageHTML = `
+                        <img
+                            src="${escapeHTML(
+                                product.image_url
+                            )}"
+                            alt="${escapeHTML(
+                                product.name
+                            )}"
+                        >
+                    `;
+
+                }
+
+
+                card.innerHTML = `
+
+                    ${imageHTML}
+
+                    <div class="product-info">
+
+                        <div class="product-name">
+                            ${escapeHTML(
+                                product.name
+                            )}
+                        </div>
+
+                        <div class="description">
+                            ${escapeHTML(
+                                product.description || ""
+                            )}
+                        </div>
+
+                        <div class="price">
+                            Rs.
+                            ${Number(
+                                product.price
+                            ).toLocaleString()}
+                        </div>
+
+                        <div class="stock">
+                            📦 Available:
+                            ${product.stock}
+                        </div>
+
+                        <button
+                            class="order-btn"
+                            onclick="orderProduct(
+                                '${escapeJS(product.id)}'
+                            )"
+                        >
+                            🛒 Order Now
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                productsBox.appendChild(
+                    card
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        productsBox.innerHTML = `
+            <div class="empty">
+                ❌ Server එකට connect වෙන්න බැරි වුණා.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* ORDER */
+
+function orderProduct(productId) {
+
+    /*
+       මේක ඊළඟ පියවරේදී
+       customer order form එකට යවමු.
+    */
+
+    window.location.href =
+        "order.html?store=" +
+        encodeURIComponent(
+            storeSlug
+        ) +
+        "&product=" +
+        encodeURIComponent(
+            productId
+        );
+
+}
+
+
+/* SECURITY */
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+function escapeJS(value) {
+
+    return String(value)
+
+        .replaceAll(
+            "\\",
+            "\\\\"
+        )
+
+        .replaceAll(
+            "'",
+            "\\'"
+        );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
