@@ -52,13 +52,85 @@ header {
 
 .title {
     font-size: 28px;
+    font-weight: bold;
     margin-bottom: 5px;
 }
 
 .subtitle {
     color: #888;
+    margin-bottom: 22px;
+}
+
+.refresh {
+    background: #7c3aed;
+    border: 0;
+    color: white;
+    padding: 11px 17px;
+    border-radius: 9px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   ORDER TABS
+========================= */
+
+.tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
     margin-bottom: 25px;
 }
+
+.tab {
+    border: 1px solid #292936;
+    background: #15151f;
+    color: #aaa;
+    padding: 15px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    transition: .2s;
+}
+
+.tab:hover {
+    transform: translateY(-2px);
+}
+
+.tab.active.pending-tab {
+    background: #5b4300;
+    border-color: #b88900;
+    color: #ffd666;
+}
+
+.tab.active.completed-tab {
+    background: #064e3b;
+    border-color: #059669;
+    color: #6ee7b7;
+}
+
+.tab.active.cancelled-tab {
+    background: #5f1515;
+    border-color: #dc2626;
+    color: #ff9999;
+}
+
+.tab-title {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.tab-count {
+    display: block;
+    font-size: 22px;
+}
+
+/* =========================
+   ORDERS
+========================= */
 
 .loading,
 .empty,
@@ -177,15 +249,26 @@ header {
     background: #25D366;
 }
 
-.refresh {
-    background: #7c3aed;
-    border: 0;
-    color: white;
-    padding: 11px 17px;
-    border-radius: 9px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-bottom: 20px;
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .tabs {
+        gap: 6px;
+    }
+
+    .tab {
+        padding: 12px 5px;
+    }
+
+    .tab-title {
+        font-size: 12px;
+    }
+
+    .tab-count {
+        font-size: 19px;
+    }
+
 }
 
 </style>
@@ -221,6 +304,7 @@ class="back-btn">
 ඔයාගේ Store එකට ලැබුණු Orders
 </div>
 
+
 <button
 class="refresh"
 onclick="loadOrders()">
@@ -228,6 +312,68 @@ onclick="loadOrders()">
 🔄 Refresh Orders
 
 </button>
+
+
+<!-- =========================
+     TABS
+========================= -->
+
+<div class="tabs">
+
+<button
+id="pendingTab"
+class="tab pending-tab active"
+onclick="showTab('pending')">
+
+<span class="tab-title">
+🟡 Pending Orders
+</span>
+
+<span
+id="pendingCount"
+class="tab-count">
+0
+</span>
+
+</button>
+
+
+<button
+id="completedTab"
+class="tab completed-tab"
+onclick="showTab('completed')">
+
+<span class="tab-title">
+🟢 Completed Orders
+</span>
+
+<span
+id="completedCount"
+class="tab-count">
+0
+</span>
+
+</button>
+
+
+<button
+id="cancelledTab"
+class="tab cancelled-tab"
+onclick="showTab('cancelled')">
+
+<span class="tab-title">
+🔴 Cancelled Orders
+</span>
+
+<span
+id="cancelledCount"
+class="tab-count">
+0
+</span>
+
+</button>
+
+</div>
 
 
 <div id="ordersBox">
@@ -247,101 +393,88 @@ const API =
 "https://myshop-api.oshadamilan2006.workers.dev/";
 
 
-/*
-========================================
-GET BUSINESS SESSION
-========================================
-*/
+let business = null;
+
+let allOrders = [];
+
+let currentTab = "pending";
+
+
+/* =========================
+   GET BUSINESS
+========================= */
 
 function getBusiness() {
 
-    const possibleKeys = [
-    "myshop_business",
-    "business",
-    "businessData",
-    "user",
-    "userData",
-    "loggedInBusiness",
-    "currentBusiness"
-];
+    const keys = [
+        "myshop_business",
+        "business",
+        "businessData",
+        "user",
+        "userData",
+        "loggedInBusiness",
+        "currentBusiness"
+    ];
+
 
     for (
         let i = 0;
-        i < possibleKeys.length;
+        i < keys.length;
         i++
     ) {
 
-        const key =
-            possibleKeys[i];
-
         const value =
-            localStorage.getItem(key);
+            localStorage.getItem(
+                keys[i]
+            );
+
 
         if (!value) {
             continue;
         }
 
+
         try {
 
-            const parsed =
+            const data =
                 JSON.parse(value);
 
+
             if (
-                parsed &&
+                data &&
                 (
-                    parsed.id ||
-                    parsed.business_id
+                    data.id ||
+                    data.business_id
                 )
             ) {
 
-                return parsed;
+                return data;
 
             }
 
         } catch (error) {
 
-            console.log(
-                "Invalid localStorage:",
-                key
-            );
+            console.log(error);
 
         }
 
     }
 
+
     return null;
+
 }
 
 
-let business =
+business =
     getBusiness();
 
 
-/*
-========================================
-IF BUSINESS NOT FOUND
-========================================
-*/
-
 if (!business) {
 
-    document.getElementById(
-        "ordersBox"
-    ).innerHTML = `
-
-        <div class="error">
-
-            ❌ Business login session එක
-            හමු වුණේ නැහැ.
-
-            <br><br>
-
-            Dashboard එකෙන් logout වෙලා
-            නැවත login වෙන්න.
-
-        </div>
-
-    `;
+    showError(
+        "Business login session එක හමු වුණේ නැහැ."
+    );
 
 } else {
 
@@ -350,16 +483,15 @@ if (!business) {
 }
 
 
-/*
-========================================
-LOAD ORDERS
-========================================
-*/
+/* =========================
+   LOAD ORDERS
+========================= */
 
 async function loadOrders() {
 
     business =
         getBusiness();
+
 
     if (!business) {
 
@@ -395,9 +527,7 @@ async function loadOrders() {
     ).innerHTML = `
 
         <div class="loading">
-
             ⏳ Orders loading...
-
         </div>
 
     `;
@@ -409,6 +539,7 @@ async function loadOrders() {
             await fetch(
                 API,
                 {
+
                     method: "POST",
 
                     headers: {
@@ -426,6 +557,7 @@ async function loadOrders() {
                         businessId
 
                     })
+
                 }
             );
 
@@ -446,33 +578,15 @@ async function loadOrders() {
         }
 
 
-        const orders =
+        allOrders =
             result.orders || [];
 
 
-        if (
-            orders.length === 0
-        ) {
-
-            document.getElementById(
-                "ordersBox"
-            ).innerHTML = `
-
-                <div class="empty">
-
-                    📦 තවම Orders නැහැ.
-
-                </div>
-
-            `;
-
-            return;
-
-        }
+        updateCounts();
 
 
-        displayOrders(
-            orders
+        showTab(
+            currentTab
         );
 
 
@@ -489,11 +603,179 @@ async function loadOrders() {
 }
 
 
-/*
-========================================
-DISPLAY ORDERS
-========================================
-*/
+/* =========================
+   COUNTS
+========================= */
+
+function updateCounts() {
+
+    const pending =
+        allOrders.filter(
+            order =>
+                !order.status ||
+                order.status === "pending"
+        ).length;
+
+
+    const completed =
+        allOrders.filter(
+            order =>
+                order.status === "completed"
+        ).length;
+
+
+    const cancelled =
+        allOrders.filter(
+            order =>
+                order.status === "cancelled"
+        ).length;
+
+
+    document.getElementById(
+        "pendingCount"
+    ).textContent =
+        pending;
+
+
+    document.getElementById(
+        "completedCount"
+    ).textContent =
+        completed;
+
+
+    document.getElementById(
+        "cancelledCount"
+    ).textContent =
+        cancelled;
+
+}
+
+
+/* =========================
+   SHOW TAB
+========================= */
+
+function showTab(
+    tab
+) {
+
+    currentTab =
+        tab;
+
+
+    document.getElementById(
+        "pendingTab"
+    ).classList.remove(
+        "active"
+    );
+
+
+    document.getElementById(
+        "completedTab"
+    ).classList.remove(
+        "active"
+    );
+
+
+    document.getElementById(
+        "cancelledTab"
+    ).classList.remove(
+        "active"
+    );
+
+
+    if (
+        tab === "pending"
+    ) {
+
+        document.getElementById(
+            "pendingTab"
+        ).classList.add(
+            "active"
+        );
+
+    }
+
+
+    if (
+        tab === "completed"
+    ) {
+
+        document.getElementById(
+            "completedTab"
+        ).classList.add(
+            "active"
+        );
+
+    }
+
+
+    if (
+        tab === "cancelled"
+    ) {
+
+        document.getElementById(
+            "cancelledTab"
+        ).classList.add(
+            "active"
+        );
+
+    }
+
+
+    let filtered;
+
+
+    if (
+        tab === "pending"
+    ) {
+
+        filtered =
+            allOrders.filter(
+                order =>
+                    !order.status ||
+                    order.status === "pending"
+            );
+
+    }
+
+
+    if (
+        tab === "completed"
+    ) {
+
+        filtered =
+            allOrders.filter(
+                order =>
+                    order.status === "completed"
+            );
+
+    }
+
+
+    if (
+        tab === "cancelled"
+    ) {
+
+        filtered =
+            allOrders.filter(
+                order =>
+                    order.status === "cancelled"
+            );
+
+    }
+
+
+    displayOrders(
+        filtered
+    );
+
+}
+
+
+/* =========================
+   DISPLAY ORDERS
+========================= */
 
 function displayOrders(
     orders
@@ -505,12 +787,66 @@ function displayOrders(
         );
 
 
+    if (
+        !orders ||
+        orders.length === 0
+    ) {
+
+        let text =
+            "තවම Orders නැහැ.";
+
+
+        if (
+            currentTab ===
+            "pending"
+        ) {
+
+            text =
+                "🟡 Pending Orders නැහැ.";
+
+        }
+
+
+        if (
+            currentTab ===
+            "completed"
+        ) {
+
+            text =
+                "🟢 Completed Orders නැහැ.";
+
+        }
+
+
+        if (
+            currentTab ===
+            "cancelled"
+        ) {
+
+            text =
+                "🔴 Cancelled Orders නැහැ.";
+
+        }
+
+
+        box.innerHTML = `
+
+            <div class="empty">
+                ${text}
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
     box.innerHTML = "";
 
 
     orders.forEach(
         function(order) {
-
 
             let statusClass =
                 "pending";
@@ -562,22 +898,17 @@ function displayOrders(
                 <div class="order-header">
 
                     <div class="order-number">
-
                         Order #${order.id}
-
                     </div>
 
                     <div class="status ${statusClass}">
-
                         ${statusText}
-
                     </div>
 
                 </div>
 
 
                 <div class="order-grid">
-
 
                     <div class="info">
 
@@ -697,7 +1028,6 @@ function displayOrders(
 
                     </div>
 
-
                 </div>
 
 
@@ -713,7 +1043,6 @@ function displayOrders(
 
 
                 <div class="actions">
-
 
                     ${
                         order.status !==
@@ -781,7 +1110,6 @@ function displayOrders(
                         ""
                     }
 
-
                 </div>
 
             `;
@@ -797,11 +1125,9 @@ function displayOrders(
 }
 
 
-/*
-========================================
-UPDATE STATUS
-========================================
-*/
+/* =========================
+   UPDATE STATUS
+========================= */
 
 async function updateStatus(
     orderId,
@@ -884,8 +1210,7 @@ async function updateStatus(
         }
 
 
-        loadOrders();
-
+        await loadOrders();
 
     } catch (error) {
 
@@ -900,11 +1225,9 @@ async function updateStatus(
 }
 
 
-/*
-========================================
-WHATSAPP CUSTOMER
-========================================
-*/
+/* =========================
+   WHATSAPP
+========================= */
 
 function openCustomerWhatsApp(
     number,
@@ -951,11 +1274,9 @@ function openCustomerWhatsApp(
 }
 
 
-/*
-========================================
-HELPERS
-========================================
-*/
+/* =========================
+   HELPERS
+========================= */
 
 function safe(
     value
