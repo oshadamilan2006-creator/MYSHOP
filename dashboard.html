@@ -1,254 +1,601 @@
 <!DOCTYPE html>
 <html lang="si">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MYSHOP Dashboard</title>
+    <meta charset="UTF-8">
 
-<style>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    <title>MYSHOP Dashboard</title>
 
-body {
-    font-family: Arial, "Noto Sans Sinhala", sans-serif;
-    background: #0b0b12;
-    color: white;
-}
+    <style>
 
-header {
-    height: 70px;
-    background: #11111b;
-    border-bottom: 1px solid #292936;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 6%;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-.logo {
-    font-size: 26px;
-    font-weight: bold;
-    color: #a855f7;
-}
+        body {
+            margin: 0;
+            font-family:
+                Arial,
+                "Noto Sans Sinhala",
+                sans-serif;
 
-.logout {
-    background: #25151a;
-    border: 1px solid #6b2737;
-    color: #ff8f9d;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-}
+            background: #0b0b12;
+            color: white;
+        }
 
-.container {
-    display: flex;
-    min-height: calc(100vh - 70px);
-}
+        /* =========================
+           HEADER
+        ========================= */
 
-.sidebar {
-    width: 240px;
-    background: #101018;
-    border-right: 1px solid #292936;
-    padding: 25px 15px;
-}
+        header {
+            height: 72px;
 
-.sidebar button {
-    width: 100%;
-    text-align: left;
-    padding: 13px 15px;
-    margin-bottom: 8px;
-    background: transparent;
-    border: none;
-    color: #aaa;
-    border-radius: 9px;
-    cursor: pointer;
-    font-size: 15px;
-}
+            background: #11111a;
 
-.sidebar button:hover,
-.sidebar button.active {
-    background: #25183b;
-    color: #c084fc;
-}
+            border-bottom:
+                1px solid #272733;
 
-.main {
-    flex: 1;
-    padding: 35px 5%;
-}
+            display: flex;
 
-.welcome {
-    margin-bottom: 30px;
-}
+            align-items: center;
 
-.welcome h1 {
-    font-size: 32px;
-    margin-bottom: 8px;
-}
+            justify-content: space-between;
 
-.welcome p {
-    color: #9999a8;
-}
+            padding:
+                0 25px;
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 30px;
-}
+            position: sticky;
 
-.card {
-    background: #14141d;
-    border: 1px solid #292936;
-    border-radius: 15px;
-    padding: 25px;
-}
+            top: 0;
 
-.card-icon {
-    font-size: 30px;
-    margin-bottom: 15px;
-}
+            z-index: 100;
+        }
 
-.card h3 {
-    margin-bottom: 8px;
-}
+        .logo {
+            font-size: 25px;
 
-.card p {
-    color: #9999a8;
-    font-size: 14px;
-}
+            font-weight: 800;
 
-.store-box {
-    background: #14141d;
-    border: 1px solid #292936;
-    border-radius: 15px;
-    padding: 25px;
-}
+            color: #a855f7;
+        }
 
-.store-box h2 {
-    margin-bottom: 15px;
-}
+        .logout {
+            background: #24141b;
 
-.store-link {
-    background: #0d0d14;
-    border: 1px solid #353542;
-    padding: 14px;
-    border-radius: 8px;
-    color: #c084fc;
-    word-break: break-all;
-    margin-bottom: 15px;
-}
+            color: #ff9aa2;
 
-.copy-btn {
-    background: #8b5cf6;
-    border: none;
-    color: white;
-    padding: 11px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-}
+            border:
+                1px solid #54212b;
 
-.mobile-menu {
-    display: none;
-}
+            border-radius: 10px;
 
-@media (max-width: 800px) {
+            padding:
+                11px 18px;
 
-    .sidebar {
-        width: 190px;
-    }
+            font-size: 14px;
 
-    .cards {
-        grid-template-columns: 1fr;
-    }
+            font-weight: bold;
 
-}
+            cursor: pointer;
+        }
 
-@media (max-width: 600px) {
+        .logout:hover {
+            background: #351720;
+        }
 
-    header {
-        padding: 0 5%;
-    }
 
-    .container {
-        display: block;
-    }
+        /* =========================
+           LAYOUT
+        ========================= */
 
-    .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #292936;
-        display: flex;
-        overflow-x: auto;
-        padding: 10px;
-    }
+        .container {
+            display: flex;
 
-    .sidebar button {
-        min-width: 130px;
-        margin: 0 5px 0 0;
-        white-space: nowrap;
-    }
+            min-height:
+                calc(100vh - 72px);
+        }
 
-    .main {
-        padding: 25px 18px;
-    }
 
-    .welcome h1 {
-        font-size: 26px;
-    }
+        /* =========================
+           SIDEBAR
+        ========================= */
 
-}
-.dashboard-buttons {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-top: 25px;
-}
+        .sidebar {
+            width: 230px;
 
-.dashboard-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 14px 22px;
-    border-radius: 12px;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    font-size: 15px;
-}
+            background: #101018;
 
-.add-product {
-    background: #8b5cf6;
-}
+            border-right:
+                1px solid #272733;
 
-.my-products {
-    background: #0891b2;
-}
+            padding: 18px;
 
-.dashboard-btn:hover {
-    transform: translateY(-2px);
-}
+            flex-shrink: 0;
+        }
 
-@media (max-width: 600px) {
+        .sidebar > button,
+        .sidebar > a {
+            width: 100%;
 
-    .dashboard-buttons {
-        flex-direction: column;
-    }
+            min-height: 50px;
 
-    .dashboard-btn {
-        width: 100%;
-    }
+            display: flex;
 
-}
-</style>
+            align-items: center;
+
+            justify-content: flex-start;
+
+            gap: 9px;
+
+            margin-bottom: 10px;
+
+            padding:
+                13px 15px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: #171720;
+
+            color: #d1d1dc;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+            transition:
+                transform .2s,
+                background .2s,
+                color .2s;
+        }
+
+        .sidebar > button:hover,
+        .sidebar > a:hover {
+            background: #22222e;
+
+            color: white;
+
+            transform:
+                translateY(-1px);
+        }
+
+        .sidebar > button.active {
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #a855f7
+                );
+
+            color: white;
+
+            box-shadow:
+                0 6px 18px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    .25
+                );
+        }
+
+
+        /* =========================
+           PRODUCT BUTTONS
+        ========================= */
+
+        .dashboard-buttons {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            margin-bottom: 10px;
+        }
+
+        .dashboard-btn {
+            width: 100%;
+
+            min-height: 50px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: flex-start;
+
+            padding:
+                13px 15px;
+
+            border-radius: 12px;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            transition: .2s;
+        }
+
+        .dashboard-btn:hover {
+            transform:
+                translateY(-1px);
+        }
+
+        .add-product {
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #a855f7
+                );
+
+            box-shadow:
+                0 6px 18px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    .20
+                );
+        }
+
+        .my-products {
+            background:
+                linear-gradient(
+                    135deg,
+                    #0891b2,
+                    #06b6d4
+                );
+
+            box-shadow:
+                0 6px 18px
+                rgba(
+                    6,
+                    182,
+                    212,
+                    .15
+                );
+        }
+
+
+        /* =========================
+           NOTIFICATION BUTTON
+        ========================= */
+
+        .notification-btn {
+            background:
+                linear-gradient(
+                    135deg,
+                    #6d28d9,
+                    #a855f7
+                ) !important;
+
+            color: white !important;
+
+            border: none !important;
+
+            box-shadow:
+                0 6px 18px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    .25
+                );
+        }
+
+        .notification-btn:hover {
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #c084fc
+                ) !important;
+
+            transform:
+                translateY(-2px) !important;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            flex: 1;
+
+            padding:
+                35px;
+
+            min-width: 0;
+        }
+
+        .welcome {
+            margin-bottom: 28px;
+        }
+
+        .welcome h1 {
+            margin:
+                0 0 8px;
+
+            font-size: 32px;
+        }
+
+        .welcome p {
+            margin: 0;
+
+            color: #8d8d9b;
+
+            font-size: 16px;
+        }
+
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    3,
+                    minmax(0, 1fr)
+                );
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: #15151f;
+
+            border:
+                1px solid #292936;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            min-height: 180px;
+
+            transition: .2s;
+        }
+
+        .card:hover {
+            border-color:
+                #55347d;
+
+            transform:
+                translateY(-3px);
+        }
+
+        .card-link {
+            display: block;
+
+            text-decoration: none;
+
+            color: inherit;
+        }
+
+        .card-icon {
+            font-size: 38px;
+
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            margin:
+                0 0 10px;
+
+            font-size: 22px;
+
+            color: white;
+        }
+
+        .card p {
+            margin: 0;
+
+            color: #858594;
+
+            line-height: 1.6;
+
+            font-size: 15px;
+        }
+
+
+        /* =========================
+           STORE BOX
+        ========================= */
+
+        .store-box {
+            background: #15151f;
+
+            border:
+                1px solid #292936;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            margin-top: 20px;
+        }
+
+        .store-box h2 {
+            margin-top: 0;
+
+            font-size: 21px;
+        }
+
+        .store-link {
+            background: #0d0d15;
+
+            border:
+                1px solid #292936;
+
+            border-radius: 10px;
+
+            padding: 14px;
+
+            color: #c084fc;
+
+            word-break: break-all;
+
+            margin:
+                15px 0;
+        }
+
+        .copy-btn {
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #a855f7
+                );
+
+            color: white;
+
+            border: none;
+
+            border-radius: 10px;
+
+            padding:
+                12px 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            header {
+                padding:
+                    0 15px;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            .container {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+
+                border-right: none;
+
+                border-bottom:
+                    1px solid #272733;
+
+                display: grid;
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
+
+                gap: 8px;
+
+                padding: 12px;
+            }
+
+            .sidebar > button,
+            .sidebar > a,
+            .dashboard-buttons {
+                margin: 0;
+            }
+
+            .dashboard-buttons {
+                gap: 8px;
+            }
+
+            .sidebar > button,
+            .sidebar > a,
+            .dashboard-btn {
+                min-height: 54px;
+
+                margin: 0;
+            }
+
+            .main {
+                padding:
+                    25px 15px;
+            }
+
+            .cards {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .welcome h1 {
+                font-size: 27px;
+            }
+
+        }
+
+
+        @media (max-width: 450px) {
+
+            header {
+                height: 65px;
+            }
+
+            .logout {
+                padding:
+                    9px 12px;
+
+                font-size: 13px;
+            }
+
+            .sidebar {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .sidebar > button,
+            .sidebar > a,
+            .dashboard-btn {
+                font-size: 13px;
+
+                padding:
+                    11px 10px;
+            }
+
+        }
+
+    </style>
+
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -266,73 +613,93 @@ header {
 </header>
 
 
+
 <div class="container">
 
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
+
     <aside class="sidebar">
+
 
         <button class="active">
             🏠 Dashboard
         </button>
 
+
         <button>
             🏪 My Store
         </button>
 
+
         <div class="dashboard-buttons">
 
-    <a
-        href="products.html"
-        class="dashboard-btn add-product"
-    >
-        ➕ Add Product
-    </a>
+            <a
+                href="products.html"
+                class="dashboard-btn add-product"
+            >
+                ➕ Add Product
+            </a>
 
-    <a
-        href="my-products.html"
-        class="dashboard-btn my-products"
-    >
-        📦 My Products
-    </a>
 
-</div>
-        
-<button
-    onclick="enableNotifications()"
-    style="
-        background:#7c3aed;
-        color:white;
-        border:none;
-        border-radius:10px;
-        padding:12px;
-        width:100%;
-        font-weight:bold;
-        cursor:pointer;
-        margin-bottom:10px;
-    "
->
-    
-    🔔 Enable Notifications
-</button>
-        <button onclick="window.location.href='orders.html'">
-    📦 Orders
-</button>
+            <a
+                href="my-products.html"
+                class="dashboard-btn my-products"
+            >
+                📦 My Products
+            </a>
+
+        </div>
+
+
+        <!-- NOTIFICATION -->
+
+        <button
+            class="notification-btn"
+            onclick="enableNotifications()"
+        >
+            🔔 Notifications
+        </button>
+
+
+        <!-- ORDERS -->
+
+        <button
+            onclick="
+                window.location.href='orders.html'
+            "
+        >
+            📦 Orders
+        </button>
+
 
         <button>
             💰 Prices
         </button>
 
+
         <button>
             ⚙️ Store Settings
         </button>
+
 
         <button>
             💳 Subscription
         </button>
 
+
     </aside>
 
 
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
     <main class="main">
+
 
         <div class="welcome">
 
@@ -341,13 +708,22 @@ header {
             </h1>
 
             <p id="businessInfo">
-                ඔබේ MYSHOP Dashboard එකට සාදරයෙන් පිළිගනිමු.
+                ඔබේ MYSHOP Dashboard එකට
+                සාදරයෙන් පිළිගනිමු.
             </p>
 
         </div>
 
 
+
+        <!-- =========================
+             DASHBOARD CARDS
+        ========================= -->
+
         <div class="cards">
+
+
+            <!-- MY STORE -->
 
             <div class="card">
 
@@ -360,32 +736,44 @@ header {
                 </h3>
 
                 <p>
-                    ඔබේ Online වෙළඳසැල කළමනාකරණය කරන්න.
+                    ඔබේ Online වෙළඳසැල
+                    කළමනාකරණය කරන්න.
                 </p>
 
             </div>
 
 
-            <div class="card">
 
-                
-                  <a href="orders.html">
+            <!-- ORDERS -->
 
-                       <div class="card-icon">
-                           📦
-                        </div>
+            <a
+                href="orders.html"
+                class="card card-link"
+            >
 
-                          <h3>
-                        Orders
-                         </h3>
+                <div class="card-icon">
+                    📦
+                </div>
 
-                      <p>
-                                   ඔබේ customers ගේ orders මෙතැනින් බලන්න.
-                 </p>
+                <h3>
+                    Orders
+                </h3>
 
-                </a>
+                <p>
+                    ඔබේ customers ගේ
+                    orders මෙතැනින් බලන්න.
+                </p>
 
-            <div class="card">
+            </a>
+
+
+
+            <!-- PRODUCTS -->
+
+            <a
+                href="my-products.html"
+                class="card card-link"
+            >
 
                 <div class="card-icon">
                     🛍️
@@ -396,13 +784,20 @@ header {
                 </h3>
 
                 <p>
-                    Products එකතු කරන්න සහ වෙනස් කරන්න.
+                    Products එකතු කරන්න
+                    සහ වෙනස් කරන්න.
                 </p>
 
-            </div>
+            </a>
+
 
         </div>
 
+
+
+        <!-- =========================
+             STORE LINK
+        ========================= -->
 
         <div class="store-box">
 
@@ -410,12 +805,14 @@ header {
                 🔗 ඔබේ Store Link
             </h2>
 
+
             <div
                 class="store-link"
                 id="storeLink"
             >
                 Loading...
             </div>
+
 
             <button
                 class="copy-btn"
@@ -426,22 +823,56 @@ header {
 
         </div>
 
+
     </main>
 
 </div>
 
 
+
 <script>
 
-/* ===================================
-   CHECK LOGIN
-=================================== */
 
-const savedBusiness =
-    localStorage.getItem("myshop_business");
+/* =========================
+   BUSINESS SESSION
+========================= */
+
+let business = null;
 
 
-if (!savedBusiness) {
+function getBusiness() {
+
+    const value =
+        localStorage.getItem(
+            "myshop_business"
+        );
+
+
+    if (!value) {
+        return null;
+    }
+
+
+    try {
+
+        return JSON.parse(value);
+
+    } catch (error) {
+
+        console.error(error);
+
+        return null;
+
+    }
+
+}
+
+
+business =
+    getBusiness();
+
+
+if (!business) {
 
     window.location.href =
         "login.html";
@@ -449,40 +880,23 @@ if (!savedBusiness) {
 }
 
 
-/* ===================================
-   BUSINESS DATA
-=================================== */
-
-let business;
-
-try {
-
-    business =
-        JSON.parse(savedBusiness);
-
-} catch (error) {
-
-    localStorage.removeItem(
-        "myshop_business"
-    );
-
-    window.location.href =
-        "login.html";
-
-}
-
-
-/* ===================================
-   SHOW BUSINESS
-=================================== */
+/* =========================
+   WELCOME
+========================= */
 
 if (business) {
+
+    const name =
+        business.business_name ||
+        business.name ||
+        "Business";
+
 
     document.getElementById(
         "welcome"
     ).textContent =
         "ආයුබෝවන්, " +
-        business.business_name +
+        name +
         " 👋";
 
 
@@ -492,55 +906,90 @@ if (business) {
         "ඔබේ MYSHOP Dashboard එකට සාදරයෙන් පිළිගනිමු.";
 
 
-    const storeURL =
-        window.location.origin +
-        "/MYSHOP/shop/" +
+    /* Store link */
+
+    const slug =
         business.store_slug;
 
 
-    document.getElementById(
-        "storeLink"
-    ).textContent =
-        storeURL;
+    if (slug) {
+
+        const storeUrl =
+            window.location.origin +
+            "/store.html?store=" +
+            encodeURIComponent(
+                slug
+            );
+
+
+        document.getElementById(
+            "storeLink"
+        ).textContent =
+            storeUrl;
+
+    } else {
+
+        document.getElementById(
+            "storeLink"
+        ).textContent =
+            "Store link එක තවම සෑදී නැහැ.";
+
+    }
 
 }
 
 
-/* ===================================
+/* =========================
    COPY STORE LINK
-=================================== */
+========================= */
 
 function copyStoreLink() {
 
-    const link =
+    const text =
         document.getElementById(
             "storeLink"
         ).textContent;
 
 
+    if (
+        !text ||
+        text.includes(
+            "තවම"
+        )
+    ) {
+
+        return;
+
+    }
+
+
     navigator.clipboard
-    .writeText(link)
-    .then(function() {
+        .writeText(text)
+        .then(
+            function() {
 
-        alert(
-            "✅ Store link එක Copy කළා!"
+                alert(
+                    "✅ Store link එක Copy කරා!"
+                );
+
+            }
+        )
+        .catch(
+            function() {
+
+                alert(
+                    "❌ Link එක Copy කරන්න බැරි වුණා."
+                );
+
+            }
         );
-
-    })
-    .catch(function() {
-
-        alert(
-            "Store link එක manually copy කරන්න."
-        );
-
-    });
 
 }
 
 
-/* ===================================
+/* =========================
    LOGOUT
-=================================== */
+========================= */
 
 function logout() {
 
@@ -548,48 +997,115 @@ function logout() {
         "myshop_business"
     );
 
+
     window.location.href =
         "login.html";
 
 }
-<script>
+
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+
 async function enableNotifications() {
 
-    if (!("Notification" in window)) {
-        alert("මේ browser එක Notifications support කරන්නේ නැහැ.");
-        return;
-    }
+    if (
+        !("Notification" in window)
+    ) {
 
-    const permission =
-        await Notification.requestPermission();
-
-    if (permission === "granted") {
-
-        await navigator.serviceWorker.register(
-            "/service-worker.js"
+        alert(
+            "මේ browser එක Notifications support කරන්නේ නැහැ."
         );
 
-        alert("🔔 Notifications ON කරා!");
-
-    } else {
-
-        alert("❌ Notifications Allow කරලා නැහැ.");
+        return;
 
     }
+
+
+    if (
+        !("serviceWorker" in navigator)
+    ) {
+
+        alert(
+            "❌ Service Worker support නැහැ."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const registration =
+            await navigator
+                .serviceWorker
+                .register(
+                    "/service-worker.js"
+                );
+
+
+        const permission =
+            await Notification
+                .requestPermission();
+
+
+        if (
+            permission ===
+            "granted"
+        ) {
+
+            alert(
+                "🔔 Notifications ON කරා!"
+            );
+
+
+            /*
+             * Test notification
+             */
+
+            await registration.showNotification(
+                "MYSHOP 🔔",
+                {
+                    body:
+                        "Notifications සාර්ථකව ON කරා!",
+                    icon:
+                        "/favicon.ico",
+                    badge:
+                        "/favicon.ico"
+                }
+            );
+
+
+        } else {
+
+            alert(
+                "❌ Notifications Allow කරලා නැහැ."
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Notification error:",
+            error
+        );
+
+
+        alert(
+            "❌ Notifications enable කරන්න බැරි වුණා."
+        );
+
+    }
+
 }
 
-window.addEventListener("load", function () {
 
-    if ("serviceWorker" in navigator) {
-
-        navigator.serviceWorker.register(
-            "/service-worker.js"
-        );
-
-    }
-
-});
 </script>
 
+
 </body>
+
 </html>
