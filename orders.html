@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>MYSHOP - Orders</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, "Noto Sans Sinhala", sans-serif;
+    background: #0b0b12;
+    color: white;
+}
+
+header {
+    background: #11111b;
+    border-bottom: 1px solid #292936;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #a855f7;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.back {
+    color: white;
+    text-decoration: none;
+    background: #292936;
+    padding: 9px 14px;
+    border-radius: 8px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px 18px 60px;
+}
+
+h1 {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #888;
+    margin-bottom: 25px;
+}
+
+.loading,
+.empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: #888;
+}
+
+.order {
+    background: #15151f;
+    border: 1px solid #292936;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+.order-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.order-id {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.status {
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.pending {
+    background: #6b4e00;
+    color: #ffd666;
+}
+
+.completed {
+    background: #064e3b;
+    color: #6ee7b7;
+}
+
+.cancelled {
+    background: #5f1515;
+    color: #ff8a8a;
+}
+
+.details {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.total {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #292936;
+    font-size: 20px;
+    font-weight: bold;
+    color: #c084fc;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.complete {
+    background: #059669;
+}
+
+.cancel {
+    background: #dc2626;
+}
+
+.whatsapp {
+    background: #25D366;
+}
+
+button:disabled {
+    opacity: .5;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<div class="logo">
+MYSHOP 📦
+</div>
+
+<a
+href="javascript:history.back()"
+class="back">
+
+← Back
+
+</a>
+
+</header>
+
+
+<div class="container">
+
+<h1>
+📦 Orders
+</h1>
+
+<p class="subtitle">
+ඔයාගේ Store එකට ලැබුණු Orders
+</p>
+
+
+<div
+id="orders">
+
+<div class="loading">
+⏳ Orders loading...
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const API =
+"https://myshop-api.oshadamilan2006.workers.dev/";
+
+
+/*
+  Business login එකෙන් save කරපු
+  business information එක ගන්නවා.
+*/
+
+let business = null;
+
+
+try {
+
+business =
+JSON.parse(
+localStorage.getItem(
+"business"
+)
+);
+
+} catch (error) {
+
+business = null;
+
+}
+
+
+if (!business) {
+
+document.getElementById(
+"orders"
+).innerHTML = `
+
+<div class="empty">
+
+❌ Login session එක හමු වුණේ නැහැ.
+
+<br><br>
+
+Business account එකෙන් නැවත Login වෙන්න.
+
+</div>
+
+`;
+
+} else {
+
+loadOrders();
+
+}
+
+
+async function loadOrders() {
+
+try {
+
+const response =
+await fetch(
+API,
+{
+
+method: "POST",
+
+headers: {
+
+"Content-Type":
+"application/json"
+
+},
+
+body:
+JSON.stringify({
+
+action:
+"get_orders",
+
+business_id:
+business.id
+
+})
+
+}
+);
+
+
+const result =
+await response.json();
+
+
+if (!result.success) {
+
+showError(
+result.error ||
+"Orders load failed"
+);
+
+return;
+
+}
+
+
+if (
+!result.orders ||
+result.orders.length === 0
+) {
+
+document.getElementById(
+"orders"
+).innerHTML = `
+
+<div class="empty">
+
+📦 තවම Orders නැහැ.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+displayOrders(
+result.orders
+);
+
+
+} catch (error) {
+
+console.error(error);
+
+showError(
+"Server එකට connect වෙන්න බැරි වුණා."
+);
+
+}
+
+}
+
+
+function displayOrders(
+orders
+) {
+
+const box =
+document.getElementById(
+"orders"
+);
+
+
+box.innerHTML = "";
+
+
+orders.forEach(
+function(order) {
+
+const card =
+document.createElement(
+"div"
+);
+
+
+card.className =
+"order";
+
+
+let statusClass =
+"pending";
+
+
+let statusText =
+"🟡 Pending";
+
+
+if (
+order.status ===
+"completed"
+) {
+
+statusClass =
+"completed";
+
+statusText =
+"🟢 Completed";
+
+}
+
+
+if (
+order.status ===
+"cancelled"
+) {
+
+statusClass =
+"cancelled";
+
+statusText =
+"🔴 Cancelled";
+
+}
+
+
+card.innerHTML = `
+
+<div class="order-top">
+
+<div class="order-id">
+
+#${order.id}
+
+</div>
+
+<div class="status ${statusClass}">
+
+${statusText}
+
+</div>
+
+</div>
+
+
+<div class="details">
+
+<div>
+
+📦 <b>Product:</b><br>
+
+${escapeHTML(
+order.product_name
+)}
+
+</div>
+
+
+<div>
+
+👤 <b>Customer:</b><br>
+
+${escapeHTML(
+order.customer_name
+)}
+
+</div>
+
+
+<div>
+
+📱 <b>Phone:</b><br>
+
+${escapeHTML(
+order.phone
+)}
+
+</div>
+
+
+<div>
+
+💬 <b>WhatsApp:</b><br>
+
+${escapeHTML(
+order.whatsapp ||
+"-"
+)}
+
+</div>
+
+
+<div>
+
+🏠 <b>Address:</b><br>
+
+${escapeHTML(
+order.address
+)}
+
+</div>
+
+
+<div>
+
+🏙️ <b>City:</b><br>
+
+${escapeHTML(
+order.city
+)}
+
+</div>
+
+
+<div>
+
+🔢 <b>Quantity:</b><br>
+
+${order.quantity}
+
+</div>
+
+
+<div>
+
+🕐 <b>Date:</b><br>
+
+${formatDate(
+order.created_at
+)}
+
+</div>
+
+</div>
+
+
+<div class="total">
+
+Total: Rs.
+${Number(
+order.total
+).toLocaleString()}
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="complete"
+onclick="updateStatus(
+${order.id},
+'completed'
+)">
+
+🟢 Complete
+
+</button>
+
+
+<button
+class="cancel"
+onclick="updateStatus(
+${order.id},
+'cancelled'
+)">
+
+🔴 Cancel
+
+</button>
+
+
+${
+order.whatsapp
+?
+`
+
+<button
+class="whatsapp"
+onclick="openWhatsApp(
+'${escapeJS(order.whatsapp)}',
+${order.id},
+'${escapeJS(order.product_name)}',
+${order.quantity},
+${order.total}
+)">
+
+📲 WhatsApp
+
+</button>
+
+`
+:
+""
+
+}
+
+</div>
+
+`;
+
+
+box.appendChild(
+card
+);
+
+}
+
+);
+
+}
+
+
+async function updateStatus(
+orderId,
+status
+) {
+
+try {
+
+const response =
+await fetch(
+API,
+{
+
+method: "POST",
+
+headers: {
+
+"Content-Type":
+"application/json"
+
+},
+
+body:
+JSON.stringify({
+
+action:
+"update_order_status",
+
+business_id:
+business.id,
+
+order_id:
+orderId,
+
+status:
+status
+
+})
+
+}
+);
+
+
+const result =
+await response.json();
+
+
+if (!result.success) {
+
+alert(
+"❌ " +
+(
+result.error ||
+"Update failed"
+)
+);
+
+return;
+
+}
+
+
+loadOrders();
+
+
+} catch (error) {
+
+alert(
+"❌ Server error"
+);
+
+}
+
+}
+
+
+function openWhatsApp(
+number,
+orderId,
+product,
+quantity,
+total
+) {
+
+let phone =
+String(number)
+.replace(
+/[^0-9]/g,
+""
+);
+
+
+if (
+phone.startsWith("0")
+) {
+
+phone =
+"94" +
+phone.substring(1);
+
+}
+
+
+const message =
+`🛒 ORDER #${orderId}
+
+📦 Product: ${product}
+🔢 Quantity: ${quantity}
+
+💰 Total: Rs. ${Number(
+total
+).toLocaleString()}
+
+Please confirm this order.`;
+
+
+const url =
+"https://wa.me/" +
+phone +
+"?text=" +
+encodeURIComponent(
+message
+);
+
+
+window.open(
+url,
+"_blank"
+);
+
+}
+
+
+function formatDate(
+date
+) {
+
+if (!date) {
+return "-";
+}
+
+return new Date(
+date
+).toLocaleString(
+"en-LK"
+);
+
+}
+
+
+function escapeHTML(
+value
+) {
+
+return String(
+value || ""
+)
+
+.replaceAll(
+"&",
+"&amp;"
+)
+
+.replaceAll(
+"<",
+"&lt;"
+)
+
+.replaceAll(
+">",
+"&gt;"
+)
+
+.replaceAll(
+'"',
+"&quot;"
+)
+
+.replaceAll(
+"'",
+"&#039;"
+);
+
+}
+
+
+function escapeJS(
+value
+) {
+
+return String(
+value || ""
+)
+
+.replaceAll(
+"\\",
+"\\\\"
+)
+
+.replaceAll(
+"'",
+"\\'"
+);
+
+}
+
+
+function showError(
+message
+) {
+
+document.getElementById(
+"orders"
+).innerHTML = `
+
+<div class="empty">
+
+❌ ${escapeHTML(
+message
+)}
+
+</div>
+
+`;
+
+}
+
+</script>
+
+
+</body>
+
+</html>
