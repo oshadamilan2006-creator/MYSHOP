@@ -2,32 +2,28 @@
 <html lang="si">
 
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>MYSHOP - Orders</title>
+<title>Orders - MYSHOP</title>
 
 <style>
 
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
+    margin: 0;
     font-family: Arial, "Noto Sans Sinhala", sans-serif;
     background: #0b0b12;
     color: white;
 }
 
 header {
-    background: #11111b;
+    background: #15151f;
     border-bottom: 1px solid #292936;
-    padding: 18px 6%;
+    padding: 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -39,22 +35,24 @@ header {
     font-weight: bold;
 }
 
-.back {
-    color: white;
-    text-decoration: none;
+.back-btn {
     background: #292936;
-    padding: 9px 14px;
-    border-radius: 8px;
+    color: white;
+    border: 0;
+    padding: 10px 15px;
+    border-radius: 9px;
+    text-decoration: none;
 }
 
 .container {
-    max-width: 1100px;
+    max-width: 1000px;
     margin: auto;
-    padding: 30px 18px 60px;
+    padding: 25px 16px 60px;
 }
 
-h1 {
-    margin-bottom: 8px;
+.title {
+    font-size: 28px;
+    margin-bottom: 5px;
 }
 
 .subtitle {
@@ -63,29 +61,33 @@ h1 {
 }
 
 .loading,
-.empty {
+.empty,
+.error {
+    background: #15151f;
+    border: 1px solid #292936;
+    border-radius: 15px;
+    padding: 40px 20px;
     text-align: center;
-    padding: 50px 20px;
-    color: #888;
+    color: #aaa;
 }
 
 .order {
     background: #15151f;
     border: 1px solid #292936;
-    border-radius: 15px;
+    border-radius: 16px;
     padding: 20px;
     margin-bottom: 18px;
 }
 
-.order-top {
+.order-header {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
     align-items: center;
-    margin-bottom: 15px;
+    gap: 10px;
+    margin-bottom: 18px;
 }
 
-.order-id {
+.order-number {
     font-size: 20px;
     font-weight: bold;
 }
@@ -98,7 +100,7 @@ h1 {
 }
 
 .pending {
-    background: #6b4e00;
+    background: #5b4300;
     color: #ffd666;
 }
 
@@ -109,41 +111,58 @@ h1 {
 
 .cancelled {
     background: #5f1515;
-    color: #ff8a8a;
+    color: #ff9999;
 }
 
-.details {
+.order-grid {
     display: grid;
-    grid-template-columns:
-        repeat(auto-fit, minmax(220px, 1fr));
-    gap: 10px;
-    color: #ccc;
-    line-height: 1.6;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(220px, 1fr)
+    );
+    gap: 15px;
+}
+
+.info {
+    background: #0d0d15;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.info-title {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    font-weight: bold;
+    word-break: break-word;
 }
 
 .total {
-    margin-top: 15px;
+    margin-top: 18px;
     padding-top: 15px;
     border-top: 1px solid #292936;
-    font-size: 20px;
-    font-weight: bold;
     color: #c084fc;
+    font-size: 21px;
+    font-weight: bold;
 }
 
 .actions {
     display: flex;
-    gap: 8px;
-    margin-top: 15px;
+    gap: 10px;
     flex-wrap: wrap;
+    margin-top: 18px;
 }
 
-button {
-    border: none;
-    padding: 10px 14px;
-    border-radius: 8px;
+.actions button {
+    border: 0;
     color: white;
-    cursor: pointer;
+    padding: 11px 15px;
+    border-radius: 9px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .complete {
@@ -158,17 +177,22 @@ button {
     background: #25D366;
 }
 
-button:disabled {
-    opacity: .5;
+.refresh {
+    background: #7c3aed;
+    border: 0;
+    color: white;
+    padding: 11px 17px;
+    border-radius: 9px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
 
 </style>
-
 </head>
 
 
 <body>
-
 
 <header>
 
@@ -178,7 +202,7 @@ MYSHOP 📦
 
 <a
 href="javascript:history.back()"
-class="back">
+class="back-btn">
 
 ← Back
 
@@ -189,17 +213,24 @@ class="back">
 
 <div class="container">
 
-<h1>
+<div class="title">
 📦 Orders
-</h1>
+</div>
 
-<p class="subtitle">
+<div class="subtitle">
 ඔයාගේ Store එකට ලැබුණු Orders
-</p>
+</div>
+
+<button
+class="refresh"
+onclick="loadOrders()">
+
+🔄 Refresh Orders
+
+</button>
 
 
-<div
-id="orders">
+<div id="ordersBox">
 
 <div class="loading">
 ⏳ Orders loading...
@@ -217,621 +248,807 @@ const API =
 
 
 /*
-  Business login එකෙන් save කරපු
-  business information එක ගන්නවා.
+========================================
+GET BUSINESS SESSION
+========================================
 */
 
-let business = null;
+function getBusiness() {
 
+    const possibleKeys = [
+        "business",
+        "businessData",
+        "user",
+        "userData",
+        "loggedInBusiness",
+        "currentBusiness"
+    ];
 
-try {
+    for (
+        let i = 0;
+        i < possibleKeys.length;
+        i++
+    ) {
 
-business =
-JSON.parse(
-localStorage.getItem(
-"business"
-)
-);
+        const key =
+            possibleKeys[i];
 
-} catch (error) {
+        const value =
+            localStorage.getItem(key);
 
-business = null;
+        if (!value) {
+            continue;
+        }
 
+        try {
+
+            const parsed =
+                JSON.parse(value);
+
+            if (
+                parsed &&
+                (
+                    parsed.id ||
+                    parsed.business_id
+                )
+            ) {
+
+                return parsed;
+
+            }
+
+        } catch (error) {
+
+            console.log(
+                "Invalid localStorage:",
+                key
+            );
+
+        }
+
+    }
+
+    return null;
 }
 
+
+let business =
+    getBusiness();
+
+
+/*
+========================================
+IF BUSINESS NOT FOUND
+========================================
+*/
 
 if (!business) {
 
-document.getElementById(
-"orders"
-).innerHTML = `
+    document.getElementById(
+        "ordersBox"
+    ).innerHTML = `
 
-<div class="empty">
+        <div class="error">
 
-❌ Login session එක හමු වුණේ නැහැ.
+            ❌ Business login session එක
+            හමු වුණේ නැහැ.
 
-<br><br>
+            <br><br>
 
-Business account එකෙන් නැවත Login වෙන්න.
+            Dashboard එකෙන් logout වෙලා
+            නැවත login වෙන්න.
 
-</div>
+        </div>
 
-`;
+    `;
 
 } else {
 
-loadOrders();
+    loadOrders();
 
 }
 
+
+/*
+========================================
+LOAD ORDERS
+========================================
+*/
 
 async function loadOrders() {
 
-try {
+    business =
+        getBusiness();
 
-const response =
-await fetch(
-API,
-{
+    if (!business) {
 
-method: "POST",
+        showError(
+            "Business login session එක හමු වුණේ නැහැ."
+        );
 
-headers: {
+        return;
 
-"Content-Type":
-"application/json"
+    }
 
-},
 
-body:
-JSON.stringify({
+    const businessId =
+        Number(
+            business.id ||
+            business.business_id
+        );
 
-action:
-"get_orders",
 
-business_id:
-business.id
+    if (!businessId) {
 
-})
+        showError(
+            "Business ID එක හමු වුණේ නැහැ."
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "ordersBox"
+    ).innerHTML = `
+
+        <div class="loading">
+
+            ⏳ Orders loading...
+
+        </div>
+
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                API,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                        "application/json"
+                    },
+
+                    body:
+                    JSON.stringify({
+
+                        action:
+                        "get_orders",
+
+                        business_id:
+                        businessId
+
+                    })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            showError(
+                result.error ||
+                "Orders load failed."
+            );
+
+            return;
+
+        }
+
+
+        const orders =
+            result.orders || [];
+
+
+        if (
+            orders.length === 0
+        ) {
+
+            document.getElementById(
+                "ordersBox"
+            ).innerHTML = `
+
+                <div class="empty">
+
+                    📦 තවම Orders නැහැ.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        displayOrders(
+            orders
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showError(
+            "Server එකට connect වෙන්න බැරි වුණා."
+        );
+
+    }
 
 }
-);
 
 
-const result =
-await response.json();
-
-
-if (!result.success) {
-
-showError(
-result.error ||
-"Orders load failed"
-);
-
-return;
-
-}
-
-
-if (
-!result.orders ||
-result.orders.length === 0
-) {
-
-document.getElementById(
-"orders"
-).innerHTML = `
-
-<div class="empty">
-
-📦 තවම Orders නැහැ.
-
-</div>
-
-`;
-
-return;
-
-}
-
-
-displayOrders(
-result.orders
-);
-
-
-} catch (error) {
-
-console.error(error);
-
-showError(
-"Server එකට connect වෙන්න බැරි වුණා."
-);
-
-}
-
-}
-
+/*
+========================================
+DISPLAY ORDERS
+========================================
+*/
 
 function displayOrders(
-orders
+    orders
 ) {
 
-const box =
-document.getElementById(
-"orders"
-);
+    const box =
+        document.getElementById(
+            "ordersBox"
+        );
 
 
-box.innerHTML = "";
+    box.innerHTML = "";
 
 
-orders.forEach(
-function(order) {
-
-const card =
-document.createElement(
-"div"
-);
+    orders.forEach(
+        function(order) {
 
 
-card.className =
-"order";
+            let statusClass =
+                "pending";
+
+            let statusText =
+                "🟡 Pending";
 
 
-let statusClass =
-"pending";
+            if (
+                order.status ===
+                "completed"
+            ) {
+
+                statusClass =
+                    "completed";
+
+                statusText =
+                    "🟢 Completed";
+
+            }
 
 
-let statusText =
-"🟡 Pending";
+            if (
+                order.status ===
+                "cancelled"
+            ) {
+
+                statusClass =
+                    "cancelled";
+
+                statusText =
+                    "🔴 Cancelled";
+
+            }
 
 
-if (
-order.status ===
-"completed"
-) {
+            const card =
+                document.createElement(
+                    "div"
+                );
 
-statusClass =
-"completed";
 
-statusText =
-"🟢 Completed";
+            card.className =
+                "order";
+
+
+            card.innerHTML = `
+
+                <div class="order-header">
+
+                    <div class="order-number">
+
+                        Order #${order.id}
+
+                    </div>
+
+                    <div class="status ${statusClass}">
+
+                        ${statusText}
+
+                    </div>
+
+                </div>
+
+
+                <div class="order-grid">
+
+
+                    <div class="info">
+
+                        <div class="info-title">
+                            📦 Product
+                        </div>
+
+                        <div class="info-value">
+                            ${safe(
+                                order.product_name
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info">
+
+                        <div class="info-title">
+                            👤 Customer
+                        </div>
+
+                        <div class="info-value">
+                            ${safe(
+                                order.customer_name
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info">
+
+                        <div class="info-title">
+                            📱 Phone
+                        </div>
+
+                        <div class="info-value">
+                            ${safe(
+                                order.phone
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info">
+
+                        <div class="info-title">
+                            💬 WhatsApp
+                        </div>
+
+                        <div class="info-value">
+                            ${safe(
+                                order.whatsapp ||
+                                "-"
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info">
+
+                        <div class="info-title">
+                            🏠 Address
+                        </div>
+
+                        <div class="info-value">
+                            ${safe(
+                                order.address
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info">
+
+                        <div class="info-title">
+                            🏙️ City
+                        </div>
+
+                        <div class="info-value">
+                            ${safe(
+                                order.city
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info">
+
+                        <div class="info-title">
+                            🔢 Quantity
+                        </div>
+
+                        <div class="info-value">
+                            ${order.quantity}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info">
+
+                        <div class="info-title">
+                            🕐 Date
+                        </div>
+
+                        <div class="info-value">
+                            ${formatDate(
+                                order.created_at
+                            )}
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="total">
+
+                    💰 Total:
+                    Rs.
+                    ${Number(
+                        order.total
+                    ).toLocaleString()}
+
+                </div>
+
+
+                <div class="actions">
+
+
+                    ${
+                        order.status !==
+                        "completed"
+                        ?
+                        `
+                        <button
+                        class="complete"
+                        onclick="
+                        updateStatus(
+                            ${order.id},
+                            'completed'
+                        )">
+
+                        🟢 Complete
+
+                        </button>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    ${
+                        order.status !==
+                        "cancelled"
+                        ?
+                        `
+                        <button
+                        class="cancel"
+                        onclick="
+                        updateStatus(
+                            ${order.id},
+                            'cancelled'
+                        )">
+
+                        🔴 Cancel
+
+                        </button>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    ${
+                        order.whatsapp
+                        ?
+                        `
+                        <button
+                        class="whatsapp"
+                        onclick="
+                        openCustomerWhatsApp(
+                            '${escapeJS(
+                                order.whatsapp
+                            )}',
+                            ${order.id}
+                        )">
+
+                        📲 WhatsApp Customer
+
+                        </button>
+                        `
+                        :
+                        ""
+                    }
+
+
+                </div>
+
+            `;
+
+
+            box.appendChild(
+                card
+            );
+
+        }
+    );
 
 }
 
 
-if (
-order.status ===
-"cancelled"
-) {
-
-statusClass =
-"cancelled";
-
-statusText =
-"🔴 Cancelled";
-
-}
-
-
-card.innerHTML = `
-
-<div class="order-top">
-
-<div class="order-id">
-
-#${order.id}
-
-</div>
-
-<div class="status ${statusClass}">
-
-${statusText}
-
-</div>
-
-</div>
-
-
-<div class="details">
-
-<div>
-
-📦 <b>Product:</b><br>
-
-${escapeHTML(
-order.product_name
-)}
-
-</div>
-
-
-<div>
-
-👤 <b>Customer:</b><br>
-
-${escapeHTML(
-order.customer_name
-)}
-
-</div>
-
-
-<div>
-
-📱 <b>Phone:</b><br>
-
-${escapeHTML(
-order.phone
-)}
-
-</div>
-
-
-<div>
-
-💬 <b>WhatsApp:</b><br>
-
-${escapeHTML(
-order.whatsapp ||
-"-"
-)}
-
-</div>
-
-
-<div>
-
-🏠 <b>Address:</b><br>
-
-${escapeHTML(
-order.address
-)}
-
-</div>
-
-
-<div>
-
-🏙️ <b>City:</b><br>
-
-${escapeHTML(
-order.city
-)}
-
-</div>
-
-
-<div>
-
-🔢 <b>Quantity:</b><br>
-
-${order.quantity}
-
-</div>
-
-
-<div>
-
-🕐 <b>Date:</b><br>
-
-${formatDate(
-order.created_at
-)}
-
-</div>
-
-</div>
-
-
-<div class="total">
-
-Total: Rs.
-${Number(
-order.total
-).toLocaleString()}
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="complete"
-onclick="updateStatus(
-${order.id},
-'completed'
-)">
-
-🟢 Complete
-
-</button>
-
-
-<button
-class="cancel"
-onclick="updateStatus(
-${order.id},
-'cancelled'
-)">
-
-🔴 Cancel
-
-</button>
-
-
-${
-order.whatsapp
-?
-`
-
-<button
-class="whatsapp"
-onclick="openWhatsApp(
-'${escapeJS(order.whatsapp)}',
-${order.id},
-'${escapeJS(order.product_name)}',
-${order.quantity},
-${order.total}
-)">
-
-📲 WhatsApp
-
-</button>
-
-`
-:
-""
-
-}
-
-</div>
-
-`;
-
-
-box.appendChild(
-card
-);
-
-}
-
-);
-
-}
-
+/*
+========================================
+UPDATE STATUS
+========================================
+*/
 
 async function updateStatus(
-orderId,
-status
+    orderId,
+    status
 ) {
 
-try {
+    business =
+        getBusiness();
 
-const response =
-await fetch(
-API,
-{
 
-method: "POST",
+    if (!business) {
 
-headers: {
+        alert(
+            "Login session එක නැහැ."
+        );
 
-"Content-Type":
-"application/json"
+        return;
 
-},
+    }
 
-body:
-JSON.stringify({
 
-action:
-"update_order_status",
+    const businessId =
+        Number(
+            business.id ||
+            business.business_id
+        );
 
-business_id:
-business.id,
 
-order_id:
-orderId,
+    try {
 
-status:
-status
+        const response =
+            await fetch(
+                API,
+                {
 
-})
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                        "application/json"
+                    },
+
+                    body:
+                    JSON.stringify({
+
+                        action:
+                        "update_order_status",
+
+                        business_id:
+                        businessId,
+
+                        order_id:
+                        orderId,
+
+                        status:
+                        status
+
+                    })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            alert(
+                "❌ " +
+                (
+                    result.error ||
+                    "Update failed"
+                )
+            );
+
+            return;
+
+        }
+
+
+        loadOrders();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Server error"
+        );
+
+    }
 
 }
-);
 
 
-const result =
-await response.json();
+/*
+========================================
+WHATSAPP CUSTOMER
+========================================
+*/
 
-
-if (!result.success) {
-
-alert(
-"❌ " +
-(
-result.error ||
-"Update failed"
-)
-);
-
-return;
-
-}
-
-
-loadOrders();
-
-
-} catch (error) {
-
-alert(
-"❌ Server error"
-);
-
-}
-
-}
-
-
-function openWhatsApp(
-number,
-orderId,
-product,
-quantity,
-total
+function openCustomerWhatsApp(
+    number,
+    orderId
 ) {
 
-let phone =
-String(number)
-.replace(
-/[^0-9]/g,
-""
-);
+    let phone =
+        String(number)
+        .replace(
+            /[^0-9]/g,
+            ""
+        );
 
 
-if (
-phone.startsWith("0")
+    if (
+        phone.startsWith("0")
+    ) {
+
+        phone =
+            "94" +
+            phone.substring(1);
+
+    }
+
+
+    const message =
+        `Hello, regarding your Order #${orderId} from MYSHOP.`;
+
+
+    const url =
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        encodeURIComponent(
+            message
+        );
+
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+/*
+========================================
+HELPERS
+========================================
+*/
+
+function safe(
+    value
 ) {
 
-phone =
-"94" +
-phone.substring(1);
+    return String(
+        value || ""
+    )
 
-}
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
 
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
 
-const message =
-`🛒 ORDER #${orderId}
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
 
-📦 Product: ${product}
-🔢 Quantity: ${quantity}
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
 
-💰 Total: Rs. ${Number(
-total
-).toLocaleString()}
-
-Please confirm this order.`;
-
-
-const url =
-"https://wa.me/" +
-phone +
-"?text=" +
-encodeURIComponent(
-message
-);
-
-
-window.open(
-url,
-"_blank"
-);
-
-}
-
-
-function formatDate(
-date
-) {
-
-if (!date) {
-return "-";
-}
-
-return new Date(
-date
-).toLocaleString(
-"en-LK"
-);
-
-}
-
-
-function escapeHTML(
-value
-) {
-
-return String(
-value || ""
-)
-
-.replaceAll(
-"&",
-"&amp;"
-)
-
-.replaceAll(
-"<",
-"&lt;"
-)
-
-.replaceAll(
-">",
-"&gt;"
-)
-
-.replaceAll(
-'"',
-"&quot;"
-)
-
-.replaceAll(
-"'",
-"&#039;"
-);
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
 
 }
 
 
 function escapeJS(
-value
+    value
 ) {
 
-return String(
-value || ""
-)
+    return String(
+        value || ""
+    )
 
-.replaceAll(
-"\\",
-"\\\\"
-)
+    .replaceAll(
+        "\\",
+        "\\\\"
+    )
 
-.replaceAll(
-"'",
-"\\'"
-);
+    .replaceAll(
+        "'",
+        "\\'"
+    );
+
+}
+
+
+function formatDate(
+    date
+) {
+
+    if (!date) {
+        return "-";
+    }
+
+    return new Date(
+        date
+    ).toLocaleString(
+        "en-LK"
+    );
 
 }
 
 
 function showError(
-message
+    message
 ) {
 
-document.getElementById(
-"orders"
-).innerHTML = `
+    document.getElementById(
+        "ordersBox"
+    ).innerHTML = `
 
-<div class="empty">
+        <div class="error">
 
-❌ ${escapeHTML(
-message
-)}
+            ❌ ${safe(message)}
 
-</div>
+        </div>
 
-`;
+    `;
 
 }
 
 </script>
 
-
 </body>
-
 </html>
