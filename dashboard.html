@@ -533,7 +533,43 @@ function logout() {
         "login.html";
 
 }
+<script>
+async function enableNotifications() {
 
+    if (!("Notification" in window)) {
+        alert("මේ browser එක Notifications support කරන්නේ නැහැ.");
+        return;
+    }
+
+    const permission =
+        await Notification.requestPermission();
+
+    if (permission === "granted") {
+
+        await navigator.serviceWorker.register(
+            "/service-worker.js"
+        );
+
+        alert("🔔 Notifications ON කරා!");
+
+    } else {
+
+        alert("❌ Notifications Allow කරලා නැහැ.");
+
+    }
+}
+
+window.addEventListener("load", function () {
+
+    if ("serviceWorker" in navigator) {
+
+        navigator.serviceWorker.register(
+            "/service-worker.js"
+        );
+
+    }
+
+});
 </script>
 
 </body>
