@@ -1153,16 +1153,17 @@ async function enableNotifications() {
 
     } catch (error) {
 
-        console.error(
-            "Notification error:",
-            error
-        );
+    console.error(
+        "Notification error:",
+        error
+    );
 
-        alert(
-            "❌ Notifications enable කරන්න බැරි වුණා."
-        );
-
-    }
+    alert(
+        "❌ Notification Error:\n\n" +
+        error.name +
+        "\n\n" +
+        error.message
+    );
 
 }
     </script>
