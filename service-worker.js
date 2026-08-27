@@ -1,44 +1,52 @@
-self.addEventListener("install", event => {
-    self.skipWaiting();
+self.addEventListener("push", function(event) {
+
+    let data = {};
+
+    try {
+        data = event.data ? event.data.json() : {};
+    } catch (e) {
+        data = {};
+    }
+
+    const title =
+        data.title || "MYSHOP 🔔";
+
+    const options = {
+        body:
+            data.body ||
+            "ඔබට අලුත් notification එකක් තියෙනවා.",
+        icon:
+            data.icon ||
+            "/favicon.ico",
+        badge:
+            data.badge ||
+            "/favicon.ico",
+        data:
+            data.url || "/"
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(
+            title,
+            options
+        )
+    );
+
 });
 
-self.addEventListener("activate", event => {
-    event.waitUntil(
-        self.clients.claim()
-    );
-});
 
 self.addEventListener(
     "notificationclick",
-    event => {
+    function(event) {
 
         event.notification.close();
 
+        const url =
+            event.notification.data ||
+            "/";
+
         event.waitUntil(
-            clients.matchAll({
-                type: "window",
-                includeUncontrolled: true
-            }).then(clientList => {
-
-                for (const client of clientList) {
-
-                    if (
-                        "focus" in client
-                    ) {
-                        return client.focus();
-                    }
-
-                }
-
-                if (
-                    clients.openWindow
-                ) {
-                    return clients.openWindow(
-                        "/orders.html"
-                    );
-                }
-
-            })
+            clients.openWindow(url)
         );
 
     }
